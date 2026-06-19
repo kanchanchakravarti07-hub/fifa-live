@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Direct Stream Player</title>
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <style>
+        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .video-js { width: 100%; height: 100%; }
+        #play-btn {
+            position: absolute; z-index: 99; padding: 20px 40px; font-size: 20px;
+            cursor: pointer; background: red; color: white; border: none; border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="play-btn">Click to Start Stream</button>
+
+    <video id="my-video" class="video-js vjs-big-play-centered" controls playsinline>
+        <source src="https://iptv-eldbert.xyz/proxy?url=https%3A%2F%2Fbmf0aw9u.fubo18.com%3A443%2Fdsports%2Fmono.m3u8%3Ftoken%3Deb283c313f37189d2d7ea1cd5f79c569873a1d31-d3-1781885820-1781867820" type="application/x-mpegURL">
+    </video>
+
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+    <script>
+        const player = videojs('my-video');
+        const btn = document.getElementById('play-btn');
+
+        btn.addEventListener('click', () => {
+            btn.style.display = 'none';
+            player.play();
+            // Adsterra Ad link yahan open hoga
+            window.open("https://your-adsterra-link.com", "_blank");
+        });
+    </script>
+</body>
+</html>
