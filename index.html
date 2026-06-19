@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Direct Stream Player</title>
+    <title>Stream Master Player</title>
     <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; }
         .video-js { width: 100%; height: 100%; }
         #play-btn {
-            position: absolute; z-index: 99; padding: 20px 40px; font-size: 20px;
-            cursor: pointer; background: red; color: white; border: none; border-radius: 10px;
+            position: absolute; z-index: 99; padding: 25px 50px; font-size: 22px;
+            cursor: pointer; background: #ff0000; color: white; border: none; 
+            border-radius: 50px; box-shadow: 0 4px 15px rgba(255,0,0,0.5);
+            font-weight: bold; text-transform: uppercase;
         }
     </style>
 </head>
@@ -27,10 +29,18 @@
         const btn = document.getElementById('play-btn');
 
         btn.addEventListener('click', () => {
+            // 1. Ad open karo (Pop-up)
+            window.open("https://www.effectivecpmnetwork.com/iyj82vg6?key=6a0d8977ddd973a097989e53a0e27ce4", "_blank");
+            
+            // 2. Button hide karo
             btn.style.display = 'none';
-            player.play();
-            // Adsterra Ad link yahan open hoga
-            window.open("https://www.effectivecpmnetwork.com/iyj82vg6?key=6a0d8977ddd973a097989e53a0e27ce4");
+
+            // 3. Play video with delay (browser policy bypass)
+            setTimeout(() => {
+                player.play().catch(e => {
+                    console.log("Playback interaction required");
+                });
+            }, 300);
         });
     </script>
 </body>
