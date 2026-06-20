@@ -20,8 +20,8 @@ jobs:
         run: |
           RESPONSE=$(curl -s "https://iptv-eldbert.xyz/iptv/channels.json" -H "User-Agent: Mozilla/5.0")
           
-          # Extract DSports channel URL using jq
-          CHANNEL_URL=$(echo "$RESPONSE" | jq -r '.[] | select(.name == "⚽️ DSports") | .url' | head -n1)
+          # Extract DSports channel URL - exact name match
+          CHANNEL_URL=$(echo "$RESPONSE" | jq -r '.[] | select(.name == "⚽ DSports") | .url' | head -n1)
           
           if [ -z "$CHANNEL_URL" ]; then
             echo "ERROR: DSports channel not found"
