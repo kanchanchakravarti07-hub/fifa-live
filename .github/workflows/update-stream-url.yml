@@ -1,4 +1,4 @@
-name: Update Stream URL - Channel Monitor
+name: DSports Real URL Capture & Update
 
 permissions:
   contents: write
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-stream-url:
+  capture-and-update:
     runs-on: ubuntu-latest
     
     steps:
@@ -18,41 +18,113 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fetch and parse channels.json
-        id: fetch_channel
-        run: |
-          RESPONSE=$(curl -s "https://iptv-eldbert.xyz/iptv/channels.json" -H "User-Agent: Mozilla/5.0")
-          
-          # Extract DSports channel URL - exact name match
-          CHANNEL_URL=$(echo "$RESPONSE" | jq -r '.[] | select(.name == "⚽ DSports") | .url' | head -n1)
-          
-          if [ -z "$CHANNEL_URL" ]; then
-            echo "ERROR: DSports channel not found"
-            exit 1
-          fi
-          
-          echo "channel_url=$CHANNEL_URL" >> $GITHUB_OUTPUT
-          echo "Found DSports URL: $CHANNEL_URL"
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
-      - name: Update index.html streamUrl
+      - name: Install Puppeteer
+        run: npm install puppeteer
+
+      - name: Capture Real DSports URL
+        id: capture
         run: |
-          CURRENT_URL=$(grep -oP '(?<=const streamUrl = ")[^"]*' index.html || echo "")
-          NEW_URL="${{ steps.fetch_channel.outputs.channel_url }}"
+          node << 'EOF'
+          const puppeteer = require('puppeteer');
           
-          if [ "$CURRENT_URL" != "$NEW_URL" ]; then
+          (async () => {
+            const browser = await puppeteer.launch({ 
+              headless: true,
+              args: ['--no-sandbox', '--disable-setuid-sandbox']
+            });
+            const page = await browser.newPage();
+            
+            let realUrl = null;
+            
+            page.on('response', (response) => {
+              const url = response.url();
+              if (url.includes('/proxy?')) {
+                try {
+                  const urlObj = new URL(url);
+                  const encoded = urlObj.searchParams.get('url');
+                  if (encoded) {
+                    realUrl = decodeURIComponent(encoded);
+                  }
+                } catch (e) {}
+              }
+            });
+            
+            try {
+              await page.goto('https://iptv-eldbert.xyz/iptv/', { waitUntil: 'networkidle2', timeout: 40000 });
+              await new Promise(resolve => setTimeout(resolve, 15000));
+              
+              await page.evaluate(() => window.scrollBy(0, 500));
+              await new Promise(resolve => setTimeout(resolve, 2000));
+              
+              await page.evaluate(() => {
+                const buttons = Array.from(document.querySelectorAll('button'));
+                const fifaBtn = buttons.find(b => b.textContent.includes('FIFA World Cup'));
+                if (fifaBtn) {
+                  fifaBtn.scrollIntoView({ behavior: 'smooth' });
+                  fifaBtn.click();
+                }
+              });
+              
+              await new Promise(resolve => setTimeout(resolve, 8000));
+              
+              await page.evaluate(() => {
+                const elements = Array.from(document.querySelectorAll('*'));
+                for (let el of elements) {
+                  const text = el.textContent;
+                  if (text.includes('⚽ DSports') && !text.includes('Plus') && text.length < 30 && el.offsetParent !== null) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                    el.click();
+                    break;
+                  }
+                }
+              });
+              
+              await new Promise(resolve => setTimeout(resolve, 25000));
+              
+              if (realUrl) {
+                console.log('STREAM_URL=' + realUrl);
+              } else {
+                throw new Error('No URL captured');
+              }
+              
+            } catch (err) {
+              console.error('Error: ' + err.message);
+              process.exit(1);
+            } finally {
+              await browser.close();
+            }
+          })();
+          EOF
+        continue-on-error: true
+
+      - name: Compare and Update URL
+        if: success()
+        run: |
+          CAPTURED_URL="${{ steps.capture.outputs.STREAM_URL }}"
+          CURRENT_URL=$(grep -o 'const streamUrl = "[^"]*"' index.html | cut -d'"' -f2 || echo "EMPTY")
+          
+          echo "Current: $CURRENT_URL"
+          echo "Captured: $CAPTURED_URL"
+          
+          if [ "$CURRENT_URL" != "$CAPTURED_URL" ] && [ ! -z "$CAPTURED_URL" ]; then
             echo "URL changed - updating"
-            sed -i "s|const streamUrl = \".*\"|const streamUrl = \"$NEW_URL\"|g" index.html
+            sed -i "s|const streamUrl = \".*\"|const streamUrl = \"$CAPTURED_URL\"|g" index.html
             echo "URL_UPDATED=true" >> $GITHUB_ENV
           else
-            echo "URLs match - no update needed"
+            echo "URL same - no update"
             echo "URL_UPDATED=false" >> $GITHUB_ENV
           fi
 
-      - name: Commit and push changes
+      - name: Commit and push
         if: env.URL_UPDATED == 'true'
         run: |
           git config --local user.email "axiom-bot@github.com"
-          git config --local user.name "Axiom Stream Monitor"
+          git config --local user.name "Axiom Stream Automator"
           git add index.html
-          git commit -m "🔄 DSports URL updated [$(date +'%Y-%m-%d %H:%M:%S')]"
+          git commit -m "🔄 DSports Real URL captured & updated [$(date +'%Y-%m-%d %H:%M:%S')]"
           git push origin main
