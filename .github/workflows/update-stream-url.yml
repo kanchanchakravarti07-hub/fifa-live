@@ -37,7 +37,7 @@ jobs:
             
             const browser = await puppeteer.launch({ 
               headless: true,
-              args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process']
+              args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security']
             });
             const page = await browser.newPage();
             
@@ -70,8 +70,6 @@ jobs:
               });
               await new Promise(resolve => setTimeout(resolve, 2000));
               
-              console.log('🔍 Finding FIFA World Cup button...');
-              
               console.log('3️⃣ Clicking FIFA World Cup...');
               await page.evaluate(() => {
                 const buttons = Array.from(document.querySelectorAll('button'));
@@ -84,37 +82,55 @@ jobs:
               
               console.log('✅ FIFA clicked!');
               
-              console.log('⏳ Waiting 12 seconds for FIFA channels...');
+              console.log('⏳ Waiting 12 seconds for FIFA channels to load...');
               await new Promise(resolve => setTimeout(resolve, 12000));
               
-              console.log('📜 Scrolling to find DSports...');
+              console.log('🔍 Scrolling down to find DSports...');
               await page.evaluate(() => {
                 window.scrollBy(0, 400);
               });
-              await new Promise(resolve => setTimeout(resolve, 3000));
+              await new Promise(resolve => setTimeout(resolve, 2000));
               
               console.log('4️⃣ Looking for DSports...');
               
               console.log('5️⃣ Clicking DSports...');
-              const dsportsClicked = await page.evaluate(() => {
-                const elements = Array.from(document.querySelectorAll('*'));
-                for (let el of elements) {
-                  const text = el.textContent;
-                  if (text.includes('⚽ DSports') && !text.includes('Plus') && text.length < 30 && el.offsetParent !== null) {
-                    el.scrollIntoView({ behavior: 'smooth' });
-                    el.click();
-                    return true;
+              let dsportsClicked = false;
+              for (let attempt = 0; attempt < 3; attempt++) {
+                dsportsClicked = await page.evaluate(() => {
+                  const elements = Array.from(document.querySelectorAll('*'));
+                  for (let el of elements) {
+                    const text = el.textContent;
+                    if (text.includes('⚽ DSports') && !text.includes('Plus') && text.length < 30) {
+                      if (el.offsetParent !== null) {
+                        el.scrollIntoView({ behavior: 'smooth' });
+                        el.click();
+                        return true;
+                      }
+                    }
                   }
+                  return false;
+                });
+                
+                if (dsportsClicked) {
+                  console.log('✅ DSports clicked on attempt ' + (attempt + 1));
+                  break;
                 }
-                return false;
-              });
+                
+                console.log('❌ Attempt ' + (attempt + 1) + ' failed, scrolling more...');
+                await page.evaluate(() => {
+                  window.scrollBy(0, 300);
+                });
+                await new Promise(resolve => setTimeout(resolve, 2000));
+              }
               
-              console.log(dsportsClicked ? '✅ DSports clicked!' : '❌ DSports click failed');
+              if (!dsportsClicked) {
+                throw new Error('DSports click failed after 3 attempts');
+              }
               
               console.log('\n▶️ STREAM LOADING...');
-              console.log('⏳ Waiting 25 seconds for proxy URL...\n');
+              console.log('⏳ Waiting 30 seconds for proxy URL...\n');
               
-              await new Promise(resolve => setTimeout(resolve, 25000));
+              await new Promise(resolve => setTimeout(resolve, 30000));
               
               if (realUrl) {
                 console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -123,11 +139,10 @@ jobs:
                 console.log(realUrl);
                 console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
                 
-                // Write to GitHub output
                 const fs = require('fs');
                 fs.appendFileSync(process.env.GITHUB_OUTPUT, `stream_url=${realUrl}\n`);
               } else {
-                throw new Error('No URL captured after 25 seconds');
+                throw new Error('No URL captured after 30 seconds');
               }
               
             } catch (err) {
