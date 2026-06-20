@@ -1,58 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Stream Master Player</title>
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
-    <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; }
-        .video-js { width: 100%; height: 100%; }
-        #play-btn {
-            position: absolute; z-index: 99; padding: 25px 50px; font-size: 22px;
-            cursor: pointer; background: #ff0000; color: white; border: none; 
-            border-radius: 50px; box-shadow: 0 4px 15px rgba(255,0,0,0.5);
-            font-weight: bold; text-transform: uppercase;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Stream Master Player</title>
+<link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { background: #000; margin: 0; height: 100%; overflow: hidden; font-family: -apple-system, Helvetica, sans-serif; }
+#video-wrapper { position: relative; width: 100vw; height: 100vh; }
+.video-js { width: 100% !important; height: 100% !important; }
+/* hide all default video.js UI, we use our own */
+.vjs-control-bar, .vjs-big-play-button, .vjs-loading-spinner, .vjs-poster { display: none !important; }
+
+/* AD GATE OVERLAY */
+#ad-gate {
+position: absolute; inset: 0; background: #000;
+display: flex; align-items: center; justify-content: center;
+z-index: 50; cursor: pointer;
+}
+#ad-gate-btn {
+width: 90px; height: 90px; border-radius: 50%;
+background: rgba(255,255,255,0.95);
+display: flex; align-items: center; justify-content: center;
+box-shadow: 0 0 0 8px rgba(255,255,255,0.08);
+}
+#ad-gate-btn svg { width: 34px; height: 34px; margin-left: 4px; }
+
+/* Center big play/pause button */
+#center-btn {
+position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+width: 80px; height: 80px; border-radius: 50%;
+background: rgba(255,255,255,0.92);
+display: flex; align-items: center; justify-content: center;
+cursor: pointer; opacity: 0; pointer-events: none;
+transition: opacity 0.25s ease; z-index: 20;
+}
+#center-btn.show { opacity: 1; pointer-events: auto; }
+#center-btn svg { width: 32px; height: 32px; }
+
+/* Bottom controls bar */
+#controls {
+position: absolute; bottom: 0; left: 0; right: 0;
+padding: 30px 16px 12px 16px;
+background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+opacity: 0; transition: opacity 0.25s ease;
+pointer-events: none; z-index: 20;
+}
+#controls.show { opacity: 1; pointer-events: auto; }
+
+.progress-row { position: relative; height: 14px; display: flex; align-items: center; margin-bottom: 6px; }
+#progress-track {
+position: relative; width: 100%; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; overflow: hidden;
+}
+#progress-fill {
+position: absolute; left: 0; top: 0; height: 100%; background: #e50914; border-radius: 2px; width: 100%;
+}
+#live-dot {
+position: absolute; right: -2px; top: 50%; transform: translateY(-50%);
+width: 10px; height: 10px; border-radius: 50%; background: #e50914;
+box-shadow: 0 0 0 3px rgba(229,9,20,0.25);
+}
+
+.controls-row { display: flex; align-items: center; justify-content: space-between; color: #fff; }
+.controls-left, .controls-right { display: flex; align-items: center; gap: 14px; }
+.icon-btn { background: none; border: none; color: #fff; cursor: pointer; padding: 6px; display: flex; align-items: center; touch-action: manipulation; }
+.icon-btn svg { width: 20px; height: 20px; }
+
+.live-label { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; color: #fff; }
+.live-label .dot { width: 8px; height: 8px; border-radius: 50%; background: #e50914; }
+
+@media (max-width: 600px) {
+#center-btn { width: 64px; height: 64px; }
+#center-btn svg { width: 26px; height: 26px; }
+#ad-gate-btn { width: 72px; height: 72px; }
+.live-label { font-size: 11px; }
+}
+</style>
 </head>
 <body>
+<div id="video-wrapper">
+<video id="my-video" class="video-js" playsinline></video>
 
-    <button id="play-btn">Click to Start Stream</button>
+<!-- AD GATE: shown first, stream doesn't start till user taps -->
+<div id="ad-gate">
+<div id="ad-gate-btn">
+<svg viewBox="0 0 24 24" fill="#000"><polygon points="6,4 20,12 6,20"/></svg>
+</div>
+</div>
 
-    <video id="my-video" class="video-js vjs-big-play-centered" controls playsinline></video>
+<div id="center-btn">
+<svg id="center-icon" viewBox="0 0 24 24" fill="#000"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+</div>
 
-    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-    <script>
-        // 1. Player setup with Referer Header Bypass
-        const player = videojs('my-video', {
-            html5: {
-                hls: {
-                    beforeRequest: function(options) {
-                        options.headers = {
-                            ...options.headers,
-                            'Referer': 'https://iptv-eldbert.xyz/'
-                        };
-                        return options;
-                    }
-                }
-            }
-        });
+<div id="controls">
+<div class="progress-row">
+<div id="progress-track"><div id="progress-fill"></div></div>
+<div id="live-dot"></div>
+</div>
+<div class="controls-row">
+<div class="controls-left">
+<button class="icon-btn" id="play-btn" onclick="togglePlay()">
+<svg viewBox="0 0 24 24" fill="#fff"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+</button>
+<button class="icon-btn" id="mute-btn" onclick="toggleMute()">
+<svg id="mute-icon" viewBox="0 0 24 24" fill="#fff"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M19 6a8 8 0 0 1 0 12" stroke="#fff" stroke-width="1.6" fill="none"/></svg>
+</button>
+</div>
+<div class="controls-right">
+<div class="live-label"><span class="dot"></span>LIVE</div>
+<button class="icon-btn" onclick="goFullscreen()">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
 
-        // 2. Stream link (TOKEN EXPIRE HOTA HAI, AGAR CHALE NA TO NAYA LINK YAHAN PASTE KARIYO)
-        const streamUrl = "https://iptv-eldbert.xyz/proxy?url=https%3A%2F%2Fbmf0aw9u.fubo18.com%3A443%2Fdsports%2Fmono.m3u8%3Ftoken%3Db6ac384cbbefe1b75d891a37ab538cee30baa84a-42-1781988430-1781970430";
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<script>
+// ===== Player setup with Referer Header Bypass =====
+const player = videojs('my-video', {
+controls: false,
+autoplay: false,
+liveui: false,
+html5: {
+hls: {
+beforeRequest: function(options) {
+options.headers = {
+...options.headers,
+'Referer': 'https://iptv-eldbert.xyz/'
+};
+return options;
+}
+}
+}
+});
 
-        const btn = document.getElementById('play-btn');
+// ===== Stream link (TOKEN EXPIRE HOTA HAI, AGAR CHALE NA TO NAYA LINK YAHAN PASTE KARIYO) =====
+const streamUrl = "https://iptv-eldbert.xyz/proxy?url=https%3A%2F%2Fbmf0aw9u.fubo18.com%3A443%2Fdsports%2Fmono.m3u8%3Ftoken%3Db6ac384cbbefe1b75d891a37ab538cee30baa84a-42-1781988430-1781970430";
 
-        btn.addEventListener('click', () => {
-            // Adsterra Link
-            window.open("https://www.effectivecpmnetwork.com/iyj82vg6?key=6a0d8977ddd973a097989e53a0e27ce4", "_blank");
-            
-            btn.style.display = 'none';
+// ===== Adsterra smart link =====
+const AD_SMARTLINK = "https://www.effectivecpmnetwork.com/iyj82vg6?key=6a0d8977ddd973a097989e53a0e27ce4";
 
-            // Load and Play
-            player.src({ src: streamUrl, type: 'application/x-mpegURL' });
-            player.play().catch(e => console.log("Playback error", e));
-        });
-    </script>
+const adGate = document.getElementById('ad-gate');
+let streamLoaded = false;
+
+adGate.addEventListener('click', () => {
+window.open(AD_SMARTLINK, '_blank');
+adGate.style.display = 'none';
+
+if (!streamLoaded) {
+streamLoaded = true;
+player.src({ src: streamUrl, type: 'application/x-mpegURL' });
+}
+
+// try unmuted autoplay first, fallback to muted if blocked
+player.muted(false);
+const p = player.play();
+if (p && p.catch) {
+p.catch(() => {
+player.muted(true);
+player.play();
+updateMuteIcon();
+});
+}
+updateMuteIcon();
+showUI();
+});
+
+function toggleMute() {
+player.muted(!player.muted());
+updateMuteIcon();
+}
+
+function updateMuteIcon() {
+const icon = document.getElementById('mute-icon');
+if (player.muted()) {
+icon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3z"/><line x1="16" y1="8" x2="22" y2="16" stroke="#fff" stroke-width="2"/><line x1="22" y1="8" x2="16" y2="16" stroke="#fff" stroke-width="2"/>';
+} else {
+icon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M19 6a8 8 0 0 1 0 12" stroke="#fff" stroke-width="1.6" fill="none"/>';
+}
+}
+
+function goFullscreen() {
+const el = document.getElementById('video-wrapper');
+if (!document.fullscreenElement) {
+if (el.requestFullscreen) el.requestFullscreen();
+else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+} else {
+if (document.exitFullscreen) document.exitFullscreen();
+else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+}
+}
+
+const centerBtn = document.getElementById('center-btn');
+const centerIcon = document.getElementById('center-icon');
+const playBtn = document.getElementById('play-btn');
+const controls = document.getElementById('controls');
+const wrapper = document.getElementById('video-wrapper');
+
+function setPauseIcon(svg) { svg.innerHTML = '<rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/>'; }
+function setPlayIcon(svg) { svg.innerHTML = '<polygon points="6,4 20,12 6,20"/>'; }
+
+// jump to live edge so resuming after pause doesn't play from behind
+function goToLiveEdge() {
+try {
+const lt = player.liveTracker;
+if (lt && lt.isLive() && lt.seekToLiveEdge) {
+lt.seekToLiveEdge();
+} else {
+const seekable = player.seekable();
+if (seekable && seekable.length) {
+player.currentTime(seekable.end(seekable.length - 1));
+}
+}
+} catch (e) {}
+}
+
+function togglePlay() {
+if (player.paused()) {
+goToLiveEdge();
+player.play();
+} else {
+player.pause();
+}
+showUI();
+}
+centerBtn.addEventListener('click', togglePlay);
+
+player.on('play', () => {
+setPauseIcon(centerIcon);
+setPauseIcon(playBtn.querySelector('svg'));
+});
+player.on('pause', () => {
+setPlayIcon(centerIcon);
+setPlayIcon(playBtn.querySelector('svg'));
+showUI(true);
+});
+
+/* ---- Auto-hide UI logic ---- */
+let hideTimer = null;
+function showUI(persist) {
+centerBtn.classList.add('show');
+controls.classList.add('show');
+clearTimeout(hideTimer);
+if (!persist) {
+hideTimer = setTimeout(() => {
+if (!player.paused()) {
+centerBtn.classList.remove('show');
+controls.classList.remove('show');
+}
+}, 2000);
+}
+}
+
+wrapper.addEventListener('mousemove', () => showUI());
+wrapper.addEventListener('click', (e) => {
+if (e.target === wrapper) showUI();
+});
+wrapper.addEventListener('touchstart', () => showUI());
+wrapper.addEventListener('mouseleave', () => {
+if (!player.paused()) {
+centerBtn.classList.remove('show');
+controls.classList.remove('show');
+}
+});
+</script>
 </body>
 </html>
