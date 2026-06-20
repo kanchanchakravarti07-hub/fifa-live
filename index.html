@@ -70,6 +70,18 @@ box-shadow: 0 0 0 3px rgba(229,9,20,0.25);
 .live-label { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; color: #fff; }
 .live-label .dot { width: 8px; height: 8px; border-radius: 50%; background: #e50914; }
 
+/* Buffering spinner */
+#buffer-spinner {
+position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+width: 48px; height: 48px; border-radius: 50%;
+border: 4px solid rgba(255,255,255,0.25);
+border-top-color: #fff;
+display: none; z-index: 15;
+animation: spin 0.8s linear infinite;
+}
+#buffer-spinner.show { display: block; }
+@keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
 @media (max-width: 600px) {
 #center-btn { width: 64px; height: 64px; }
 #center-btn svg { width: 26px; height: 26px; }
@@ -89,6 +101,8 @@ box-shadow: 0 0 0 3px rgba(229,9,20,0.25);
 </div>
 </div>
 
+<div id="buffer-spinner"></div>
+
 <div id="center-btn">
 <svg id="center-icon" viewBox="0 0 24 24" fill="#000"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
 </div>
@@ -100,16 +114,16 @@ box-shadow: 0 0 0 3px rgba(229,9,20,0.25);
 </div>
 <div class="controls-row">
 <div class="controls-left">
-<button class="icon-btn" id="play-btn" onclick="togglePlay()">
+<button class="icon-btn" id="play-btn" onclick="togglePlay(event)">
 <svg viewBox="0 0 24 24" fill="#fff"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
 </button>
-<button class="icon-btn" id="mute-btn" onclick="toggleMute()">
+<button class="icon-btn" id="mute-btn" onclick="toggleMute(event)">
 <svg id="mute-icon" viewBox="0 0 24 24" fill="#fff"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M19 6a8 8 0 0 1 0 12" stroke="#fff" stroke-width="1.6" fill="none"/></svg>
 </button>
 </div>
 <div class="controls-right">
 <div class="live-label"><span class="dot"></span>LIVE</div>
-<button class="icon-btn" onclick="goFullscreen()">
+<button class="icon-btn" onclick="goFullscreen(event)">
 <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
 </button>
 </div>
@@ -119,12 +133,22 @@ box-shadow: 0 0 0 3px rgba(229,9,20,0.25);
 
 <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 <script>
-// ===== Player setup with Referer Header Bypass =====
+// ===== Player setup with Referer Header Bypass + buffer tuning =====
 const player = videojs('my-video', {
 controls: false,
 autoplay: false,
 liveui: false,
 html5: {
+vhs: {
+// keep more video buffered ahead so weak networks stutter less
+GOAL_BUFFER_LENGTH: 30,
+MAX_GOAL_BUFFER_LENGTH: 60,
+BACK_BUFFER_LENGTH: 30,
+// allow a bit of back-buffer so small pauses don't force a hard reset
+bandwidth: 4194304,
+enableLowInitialPlaylist: true,
+useDevicePixelRatio: true
+},
 hls: {
 beforeRequest: function(options) {
 options.headers = {
@@ -155,7 +179,6 @@ streamLoaded = true;
 player.src({ src: streamUrl, type: 'application/x-mpegURL' });
 }
 
-// try unmuted autoplay first, fallback to muted if blocked
 player.muted(false);
 const p = player.play();
 if (p && p.catch) {
@@ -169,7 +192,8 @@ updateMuteIcon();
 showUI();
 });
 
-function toggleMute() {
+function toggleMute(e) {
+if (e) e.stopPropagation();
 player.muted(!player.muted());
 updateMuteIcon();
 }
@@ -183,7 +207,8 @@ icon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 8.5a5 5 0 0 1 
 }
 }
 
-function goFullscreen() {
+function goFullscreen(e) {
+if (e) e.stopPropagation();
 const el = document.getElementById('video-wrapper');
 if (!document.fullscreenElement) {
 if (el.requestFullscreen) el.requestFullscreen();
@@ -199,28 +224,32 @@ const centerIcon = document.getElementById('center-icon');
 const playBtn = document.getElementById('play-btn');
 const controls = document.getElementById('controls');
 const wrapper = document.getElementById('video-wrapper');
+const bufferSpinner = document.getElementById('buffer-spinner');
 
 function setPauseIcon(svg) { svg.innerHTML = '<rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/>'; }
 function setPlayIcon(svg) { svg.innerHTML = '<polygon points="6,4 20,12 6,20"/>'; }
 
-// jump to live edge so resuming after pause doesn't play from behind
-function goToLiveEdge() {
+// Only snap to live edge if user has drifted far behind (e.g. long pause / heavy buffering).
+// A short pause/resume just continues from where it was — much smoother, no jump/stutter feeling.
+const LIVE_DRIFT_THRESHOLD = 15; // seconds behind live edge before we force a jump
+
+function maybeCatchUpToLive() {
 try {
-const lt = player.liveTracker;
-if (lt && lt.isLive() && lt.seekToLiveEdge) {
-lt.seekToLiveEdge();
-} else {
 const seekable = player.seekable();
 if (seekable && seekable.length) {
-player.currentTime(seekable.end(seekable.length - 1));
+const liveEdge = seekable.end(seekable.length - 1);
+const current = player.currentTime();
+if (liveEdge - current > LIVE_DRIFT_THRESHOLD) {
+player.currentTime(liveEdge - 2); // land just slightly behind true edge for stability
 }
 }
 } catch (e) {}
 }
 
-function togglePlay() {
+function togglePlay(e) {
+if (e) e.stopPropagation();
 if (player.paused()) {
-goToLiveEdge();
+maybeCatchUpToLive();
 player.play();
 } else {
 player.pause();
@@ -239,6 +268,11 @@ setPlayIcon(playBtn.querySelector('svg'));
 showUI(true);
 });
 
+// show a spinner while buffering/stalling so it doesn't look "stuck"
+player.on('waiting', () => bufferSpinner.classList.add('show'));
+player.on('playing', () => bufferSpinner.classList.remove('show'));
+player.on('canplay', () => bufferSpinner.classList.remove('show'));
+
 /* ---- Auto-hide UI logic ---- */
 let hideTimer = null;
 function showUI(persist) {
@@ -255,10 +289,33 @@ controls.classList.remove('show');
 }
 }
 
+/* ---- Tap anywhere = play/pause, Double-tap = fullscreen (works on laptop too) ---- */
+let lastTapTime = 0;
+let singleTapTimer = null;
+
+function handleWrapperTap(e) {
+// ignore taps on the controls bar / buttons, they handle themselves
+if (e.target.closest('#controls') || e.target.closest('#ad-gate')) return;
+
+const now = Date.now();
+const delta = now - lastTapTime;
+
+if (delta > 0 && delta < 350) {
+// double tap/click detected
+clearTimeout(singleTapTimer);
+lastTapTime = 0;
+goFullscreen();
+} else {
+lastTapTime = now;
+// wait briefly to see if a second tap comes in before treating as single tap
+singleTapTimer = setTimeout(() => {
+togglePlay();
+}, 300);
+}
+}
+
+wrapper.addEventListener('click', handleWrapperTap);
 wrapper.addEventListener('mousemove', () => showUI());
-wrapper.addEventListener('click', (e) => {
-if (e.target === wrapper) showUI();
-});
 wrapper.addEventListener('touchstart', () => showUI());
 wrapper.addEventListener('mouseleave', () => {
 if (!player.paused()) {
