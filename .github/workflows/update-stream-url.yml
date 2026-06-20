@@ -1,0 +1,55 @@
+name: Update Stream URL - Channel Monitor
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Every 1 hour
+  workflow_dispatch:
+
+jobs:
+  update-stream-url:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch and parse channels.json
+        id: fetch_channel
+        run: |
+          RESPONSE=$(curl -s "https://iptv-eldbert.xyz/iptv/channels.json" -H "User-Agent: Mozilla/5.0")
+          
+          # Extract DSports channel URL using jq
+          CHANNEL_URL=$(echo "$RESPONSE" | jq -r '.[] | select(.name == "⚽️ DSports") | .url' | head -n1)
+          
+          if [ -z "$CHANNEL_URL" ]; then
+            echo "ERROR: DSports channel not found"
+            exit 1
+          fi
+          
+          echo "channel_url=$CHANNEL_URL" >> $GITHUB_OUTPUT
+          echo "Found DSports URL: $CHANNEL_URL"
+
+      - name: Update index.html streamUrl
+        run: |
+          CURRENT_URL=$(grep -oP '(?<=const streamUrl = ")[^"]*' index.html || echo "")
+          NEW_URL="${{ steps.fetch_channel.outputs.channel_url }}"
+          
+          if [ "$CURRENT_URL" != "$NEW_URL" ]; then
+            echo "URL changed - updating"
+            sed -i "s|const streamUrl = \".*\"|const streamUrl = \"$NEW_URL\"|g" index.html
+            echo "URL_UPDATED=true" >> $GITHUB_ENV
+          else
+            echo "URLs match - no update needed"
+            echo "URL_UPDATED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Commit and push changes
+        if: env.URL_UPDATED == 'true'
+        run: |
+          git config --local user.email "axiom-bot@github.com"
+          git config --local user.name "Axiom Stream Monitor"
+          git add index.html
+          git commit -m "🔄 DSports URL updated [$(date +'%Y-%m-%d %H:%M:%S')]"
+          git push origin main
