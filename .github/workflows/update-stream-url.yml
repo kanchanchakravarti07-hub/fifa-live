@@ -1,102 +1,15 @@
-name: DSports Stream Monitor & Auto-Capture
-
-permissions:
-  contents: write
-  actions: write
-
-on:
-  schedule:
-    - cron: '*/10 * * * *'
-  workflow_dispatch:
-
-jobs:
-  monitor-and-capture:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install Dependencies
-        run: npm install axios
-
-      - name: Health Check Stream
-        id: healthcheck
-        continue-on-error: true
-        run: |
-          node << 'EOF'
-          const fs = require('fs');
-          const axios = require('axios');
-          
-          (async () => {
-            try {
-              const indexContent = fs.readFileSync('index.html', 'utf8');
-              const streamMatch = indexContent.match(/const streamUrl = "([^"]+)"/);
-              
-              if (!streamMatch) {
-                console.log('❌ No stream URL found');
-                process.exit(1);
-              }
-              
-              const streamUrl = streamMatch[1];
-              console.log('🔍 Checking stream...');
-              
-              try {
-                const response = await axios.head(streamUrl, { 
-                  timeout: 8000,
-                  maxRedirects: 3,
-                  validateStatus: function(status) {
-                    return status < 500;
-                  }
-                });
-                
-                console.log('Status: ' + response.status);
-                
-                if (response.status === 404 || response.status === 403) {
-                  console.log('❌ Stream dead - Status: ' + response.status);
-                  process.exit(1);
-                } else if (response.status >= 200 && response.status < 400) {
-                  console.log('✅ Stream alive');
-                  process.exit(0);
-                } else {
-                  console.log('❌ Bad status: ' + response.status);
-                  process.exit(1);
-                }
-              } catch (err) {
-                console.error('❌ Connection error: ' + err.message);
-                process.exit(1);
-              }
-            } catch (err) {
-              console.error('❌ Error: ' + err.message);
-              process.exit(1);
-            }
-          })();
-          EOF
-
-      - name: Install Puppeteer
-        if: failure()
-        run: npm install puppeteer
-
-      - name: Capture Real DSports URL
-        if: failure()
+- name: Capture Real DSports URL
         id: capture
         run: |
           node << 'EOF'
           const puppeteer = require('puppeteer');
           
           (async () => {
-            console.log('🚨 AUTO-CAPTURE TRIGGERED\n');
+            console.log('🚀 HUMAN-STYLE AUTOMATION\n');
             
             const browser = await puppeteer.launch({ 
               headless: true,
-              args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security']
+              args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process']
             });
             const page = await browser.newPage();
             
@@ -110,7 +23,7 @@ jobs:
                   const encoded = urlObj.searchParams.get('url');
                   if (encoded) {
                     realUrl = decodeURIComponent(encoded);
-                    console.log('\n✅ CAPTURED: ' + realUrl.substring(0, 60) + '...');
+                    console.log('\n✅ CAPTURED: ' + realUrl);
                   }
                 } catch (e) {}
               }
@@ -120,14 +33,14 @@ jobs:
               console.log('1️⃣ Loading website...');
               await page.goto('https://iptv-eldbert.xyz/iptv/', { waitUntil: 'networkidle2', timeout: 40000 });
               
-              console.log('⏳ Wait 15 sec...');
+              console.log('⏳ Waiting 15 seconds...');
               await new Promise(resolve => setTimeout(resolve, 15000));
               
-              console.log('2️⃣ Scrolling...');
-              await page.evaluate(() => { window.scrollBy(0, 500); });
+              console.log('2️⃣ Scrolling down to FIFA...');
+              await page.evaluate(() => window.scrollBy(0, 500));
               await new Promise(resolve => setTimeout(resolve, 2000));
               
-              console.log('3️⃣ Click FIFA...');
+              console.log('3️⃣ Clicking FIFA World Cup...');
               await page.evaluate(() => {
                 const buttons = Array.from(document.querySelectorAll('button'));
                 const fifaBtn = buttons.find(b => b.textContent.includes('FIFA World Cup'));
@@ -137,59 +50,49 @@ jobs:
                 }
               });
               
-              console.log('✅ FIFA clicked');
-              console.log('⏳ Wait 12 sec...');
-              await new Promise(resolve => setTimeout(resolve, 12000));
+              console.log('✅ FIFA clicked!');
               
-              console.log('📜 Scroll for DSports...');
-              await page.evaluate(() => { window.scrollBy(0, 400); });
+              console.log('⏳ Waiting 8 seconds for FIFA channels...');
+              await new Promise(resolve => setTimeout(resolve, 8000));
+              
+              console.log('4️⃣ Scrolling down to find DSports...');
+              await page.evaluate(() => window.scrollBy(0, 500));
               await new Promise(resolve => setTimeout(resolve, 2000));
               
-              console.log('4️⃣ Click DSports...');
-              let dsportsClicked = false;
-              for (let attempt = 0; attempt < 3; attempt++) {
-                dsportsClicked = await page.evaluate(() => {
-                  const elements = Array.from(document.querySelectorAll('*'));
-                  for (let el of elements) {
-                    const text = el.textContent;
-                    if (text.includes('⚽ DSports') && !text.includes('Plus') && text.length < 30) {
-                      if (el.offsetParent !== null) {
-                        el.scrollIntoView({ behavior: 'smooth' });
-                        el.click();
-                        return true;
-                      }
-                    }
+              console.log('5️⃣ Looking for DSports...');
+              
+              console.log('6️⃣ Clicking DSports...');
+              const dsportsClicked = await page.evaluate(() => {
+                const elements = Array.from(document.querySelectorAll('*'));
+                for (let el of elements) {
+                  const text = el.textContent;
+                  if (text.includes('⚽ DSports') && !text.includes('Plus') && text.length < 30 && el.offsetParent !== null) {
+                    el.scrollIntoView({ behavior: 'smooth' });
+                    el.click();
+                    return true;
                   }
-                  return false;
-                });
-                
-                if (dsportsClicked) {
-                  console.log('✅ DSports clicked - attempt ' + (attempt + 1));
-                  break;
                 }
-                
-                console.log('Attempt ' + (attempt + 1) + ' failed, scrolling...');
-                await page.evaluate(() => { window.scrollBy(0, 300); });
-                await new Promise(resolve => setTimeout(resolve, 2000));
-              }
+                return false;
+              });
               
-              if (!dsportsClicked) {
-                throw new Error('DSports click failed');
-              }
+              console.log(dsportsClicked ? '✅ DSports clicked!' : '❌ DSports click failed');
               
-              console.log('▶️ Stream loading...');
-              console.log('⏳ Wait 30 sec for URL...\n');
+              console.log('\n▶️ STREAM LOADING...');
+              console.log('⏳ Waiting 25 seconds for proxy URL...\n');
               
-              await new Promise(resolve => setTimeout(resolve, 30000));
+              await new Promise(resolve => setTimeout(resolve, 25000));
               
               if (realUrl) {
-                console.log('\n✅✅✅ NEW URL CAPTURED ✅✅✅');
-                console.log(realUrl + '\n');
+                console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                console.log('✅✅✅ REAL DSPORTS URL ✅✅✅');
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                console.log(realUrl);
+                console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
                 
                 const fs = require('fs');
                 fs.appendFileSync(process.env.GITHUB_OUTPUT, `stream_url=${realUrl}\n`);
               } else {
-                throw new Error('No URL captured');
+                throw new Error('No URL captured after 25 seconds');
               }
               
             } catch (err) {
@@ -200,25 +103,3 @@ jobs:
             }
           })();
           EOF
-
-      - name: Update index.html
-        if: success() && steps.capture.outcome == 'success'
-        run: |
-          CAPTURED_URL="${{ steps.capture.outputs.stream_url }}"
-          
-          if [ ! -z "$CAPTURED_URL" ]; then
-            echo "Updating HTML with new URL..."
-            sed -i "s|const streamUrl = \".*\"|const streamUrl = \"$CAPTURED_URL\"|g" index.html
-            echo "URL_UPDATED=true" >> $GITHUB_ENV
-          else
-            echo "URL_UPDATED=false" >> $GITHUB_ENV
-          fi
-
-      - name: Commit and push
-        if: env.URL_UPDATED == 'true'
-        run: |
-          git config --local user.email "axiom-bot@github.com"
-          git config --local user.name "Axiom Monitor"
-          git add index.html
-          git commit -m "🚨 Stream updated - New URL [$(date +'%Y-%m-%d %H:%M:%S')]"
-          git push origin main || git push origin master
