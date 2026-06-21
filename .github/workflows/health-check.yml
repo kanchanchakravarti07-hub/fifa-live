@@ -1,12 +1,15 @@
 name: Stream Auto-Update
 
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
 
 jobs:
-  auto-update-stream:
+  auto-update:
     runs-on: ubuntu-latest
     
     steps:
@@ -23,16 +26,18 @@ jobs:
       - name: Install Puppeteer
         run: npm install puppeteer
 
-      - name: Capture Real DSports URL
-        id: capture
+      - name: Capture Real DSports URL & Update
         run: |
           node << 'EOF'
           const puppeteer = require('puppeteer');
+          const fs = require('fs');
           
           (async () => {
+            console.log('🚀 Starting Stream Auto-Update\n');
+            
             const browser = await puppeteer.launch({ 
               headless: true,
-              args: ['--no-sandbox', '--disable-setuid-sandbox']
+              args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security']
             });
             const page = await browser.newPage();
             
@@ -46,20 +51,27 @@ jobs:
                   const encoded = urlObj.searchParams.get('url');
                   if (encoded) {
                     realUrl = decodeURIComponent(encoded);
+                    console.log('✅ CAPTURED URL');
                   }
                 } catch (e) {}
               }
             });
             
             try {
-              console.log('Loading IPTV...');
-              await page.goto('https://iptv-eldbert.xyz/iptv/', { waitUntil: 'networkidle2', timeout: 40000 });
+              console.log('1️⃣ Loading IPTV website...');
+              await page.goto('https://iptv-eldbert.xyz/iptv/', { 
+                waitUntil: 'networkidle2', 
+                timeout: 40000 
+              });
               
-              await new Promise(resolve => setTimeout(resolve, 15000));
+              console.log('⏳ Waiting 15 seconds for page load...');
+              await new Promise(r => setTimeout(r, 15000));
               
-              await page.evaluate(() => window.scrollBy(0, 500));
-              await new Promise(resolve => setTimeout(resolve, 2000));
+              console.log('2️⃣ Scrolling down...');
+              await page.evaluate(() => { window.scrollBy(0, 500); });
+              await new Promise(r => setTimeout(r, 2000));
               
+              console.log('3️⃣ Clicking FIFA World Cup...');
               await page.evaluate(() => {
                 const buttons = Array.from(document.querySelectorAll('button'));
                 const fifaBtn = buttons.find(b => b.textContent.includes('FIFA World Cup'));
@@ -69,18 +81,26 @@ jobs:
                 }
               });
               
-              await new Promise(resolve => setTimeout(resolve, 12000));
+              console.log('✅ FIFA clicked');
+              console.log('⏳ Waiting 12 seconds for FIFA channels...');
+              await new Promise(r => setTimeout(r, 12000));
               
-              await page.evaluate(() => window.scrollBy(0, 400));
-              await new Promise(resolve => setTimeout(resolve, 2000));
+              console.log('4️⃣ Scrolling to find DSports...');
+              await page.evaluate(() => { window.scrollBy(0, 400); });
+              await new Promise(r => setTimeout(r, 2000));
               
-              let clicked = false;
-              for (let i = 0; i < 3; i++) {
-                clicked = await page.evaluate(() => {
+              console.log('5️⃣ Clicking DSports (with retry)...');
+              let dsportsClicked = false;
+              
+              for (let attempt = 0; attempt < 3; attempt++) {
+                dsportsClicked = await page.evaluate(() => {
                   const elements = Array.from(document.querySelectorAll('*'));
                   for (let el of elements) {
                     const text = el.textContent;
-                    if (text.includes('⚽ DSports') && !text.includes('Plus') && text.length < 30 && el.offsetParent !== null) {
+                    if (text.includes('⚽ DSports') && 
+                        !text.includes('Plus') && 
+                        text.length < 30 && 
+                        el.offsetParent !== null) {
                       el.scrollIntoView({ behavior: 'smooth' });
                       el.click();
                       return true;
@@ -88,23 +108,62 @@ jobs:
                   }
                   return false;
                 });
-                if (clicked) break;
-                await page.evaluate(() => window.scrollBy(0, 300));
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                if (dsportsClicked) {
+                  console.log('✅ DSports clicked (attempt ' + (attempt + 1) + ')');
+                  break;
+                }
+                
+                if (attempt < 2) {
+                  console.log('Attempt ' + (attempt + 1) + ' failed, scrolling and retrying...');
+                  await page.evaluate(() => { window.scrollBy(0, 300); });
+                  await new Promise(r => setTimeout(r, 2000));
+                }
               }
               
-              await new Promise(resolve => setTimeout(resolve, 25000));
-              
-              if (realUrl) {
-                console.log('CAPTURED_URL=' + realUrl);
-                const fs = require('fs');
-                fs.appendFileSync(process.env.GITHUB_OUTPUT, `stream_url=${realUrl}\n`);
-              } else {
-                throw new Error('No URL captured');
+              if (!dsportsClicked) {
+                throw new Error('Failed to click DSports after 3 attempts');
               }
+              
+              console.log('▶️ Stream loading...');
+              console.log('⏳ Waiting 25 seconds for stream response...');
+              await new Promise(r => setTimeout(r, 25000));
+              
+              if (!realUrl) {
+                throw new Error('No stream URL captured after 25 seconds');
+              }
+              
+              console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+              console.log('📡 CAPTURED URL:');
+              console.log(realUrl.substring(0, 80) + '...');
+              console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+              
+              // Read current index.html
+              const htmlContent = fs.readFileSync('index.html', 'utf8');
+              const currentMatch = htmlContent.match(/const streamUrl = "([^"]+)"/);
+              const currentUrl = currentMatch ? currentMatch[1] : null;
+              
+              console.log('🔍 Comparing URLs...');
+              console.log('Current: ' + (currentUrl ? currentUrl.substring(0, 60) + '...' : 'NONE'));
+              console.log('Captured: ' + realUrl.substring(0, 60) + '...');
+              
+              if (currentUrl === realUrl) {
+                console.log('\n✅ URLs match - no update needed');
+                process.exit(0);
+              }
+              
+              console.log('\n🔄 URLs different - updating index.html...');
+              const updatedHtml = htmlContent.replace(
+                /const streamUrl = "[^"]*"/,
+                `const streamUrl = "${realUrl}"`
+              );
+              
+              fs.writeFileSync('index.html', updatedHtml);
+              console.log('✅ index.html updated');
+              process.exit(0);
               
             } catch (err) {
-              console.error('Error: ' + err.message);
+              console.error('\n❌ ERROR: ' + err.message);
               process.exit(1);
             } finally {
               await browser.close();
@@ -112,29 +171,16 @@ jobs:
           })();
           EOF
 
-      - name: Compare and Update
-        if: success()
+      - name: Commit and Push Changes
         run: |
-          CAPTURED_URL="${{ steps.capture.outputs.stream_url }}"
-          CURRENT_URL=$(grep -o 'const streamUrl = "[^"]*"' index.html | cut -d'"' -f2 || echo "EMPTY")
-          
-          echo "Current: $CURRENT_URL"
-          echo "Captured: $CAPTURED_URL"
-          
-          if [ "$CURRENT_URL" != "$CAPTURED_URL" ] && [ ! -z "$CAPTURED_URL" ]; then
-            echo "URL changed - updating"
-            sed -i "s|const streamUrl = \".*\"|const streamUrl = \"$CAPTURED_URL\"|g" index.html
-            echo "UPDATED=true" >> $GITHUB_ENV
+          if git diff --quiet index.html; then
+            echo "✅ No changes to commit"
           else
-            echo "URL same - no update"
-            echo "UPDATED=false" >> $GITHUB_ENV
+            echo "📝 Changes detected - committing..."
+            git config --local user.email "axiom-bot@github.com"
+            git config --local user.name "Axiom Auto-Update"
+            git add index.html
+            git commit -m "🔄 Stream URL Auto-Updated [$(date +'%Y-%m-%d %H:%M:%S')]"
+            git push origin main || git push origin master
+            echo "✅ Changes pushed to repo"
           fi
-
-      - name: Commit and Push
-        if: env.UPDATED == 'true'
-        run: |
-          git config --local user.email "axiom-bot@github.com"
-          git config --local user.name "Axiom Auto-Update"
-          git add index.html
-          git commit -m "🔄 Stream URL updated [$(date +'%Y-%m-%d %H:%M:%S')]"
-          git push origin main
