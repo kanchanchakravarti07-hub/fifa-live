@@ -26,14 +26,14 @@ jobs:
       - name: Install Puppeteer
         run: npm install puppeteer
 
-      - name: Capture Real DSports URL & Update
+      - name: Capture & Update
         run: |
           node << 'EOF'
           const puppeteer = require('puppeteer');
           const fs = require('fs');
           
           (async () => {
-            console.log('🚀 Starting Stream Auto-Update\n');
+            console.log('🚀 Stream Auto-Update\n');
             
             const browser = await puppeteer.launch({ 
               headless: true,
@@ -52,100 +52,57 @@ jobs:
                   const encoded = urlObj.searchParams.get('url');
                   if (encoded) {
                     realUrl = decodeURIComponent(encoded);
-                    console.log('✅ CAPTURED URL');
+                    console.log('✅ CAPTURED');
                   }
                 } catch (e) {}
               }
             });
             
             try {
-              console.log('1️⃣ Loading IPTV website...');
-              await page.goto('https://iptv-eldbert.xyz/iptv/', { 
-                waitUntil: 'networkidle2', 
-                timeout: 40000 
-              });
-              
-              console.log('⏳ Waiting 8 seconds...');
+              console.log('1️⃣ Loading...');
+              await page.goto('https://iptv-eldbert.xyz/iptv/', { waitUntil: 'networkidle2', timeout: 40000 });
               await new Promise(r => setTimeout(r, 8000));
               
-              console.log('2️⃣ Scrolling down...');
+              console.log('2️⃣ Scroll & Click FIFA...');
               for (let i = 0; i < 3; i++) {
-                await page.evaluate(() => { window.scrollBy(0, 300); });
+                await page.evaluate(() => window.scrollBy(0, 300));
                 await new Promise(r => setTimeout(r, 600));
               }
               
-              console.log('3️⃣ Clicking FIFA World Cup...');
               await page.evaluate(() => {
-                const buttons = Array.from(document.querySelectorAll('button, [role="button"]'));
-                for (let btn of buttons) {
-                  if (btn.textContent.includes('FIFA') && btn.textContent.includes('World Cup')) {
-                    btn.click();
-                    break;
-                  }
-                }
+                Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('FIFA') && b.textContent.includes('World Cup'))?.click();
               });
               
-              console.log('✅ FIFA click done');
-              
-              console.log('⏳ Waiting 7 seconds for FIFA channels...');
               await new Promise(r => setTimeout(r, 7000));
               
-              console.log('4️⃣ Scrolling down for DSports...');
+              console.log('3️⃣ Scroll & Click DSports...');
               for (let i = 0; i < 6; i++) {
-                await page.evaluate(() => { window.scrollBy(0, 350); });
+                await page.evaluate(() => window.scrollBy(0, 350));
                 await new Promise(r => setTimeout(r, 700));
               }
               
-              console.log('5️⃣ Clicking DSports...');
-              const dsportsClicked = await page.evaluate(() => {
-                const allElements = document.querySelectorAll('*');
-                for (let el of allElements) {
-                  const text = el.textContent.trim();
-                  
-                  if ((text === '⚽ DSports' || text.startsWith('⚽ DSports')) && 
-                      !text.includes('Plus') && 
-                      !text.includes('Uruguay')) {
-                    if (el.offsetParent !== null) {
-                      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                      el.click();
-                      return true;
-                    }
-                  }
-                }
-                return false;
+              await page.evaluate(() => {
+                Array.from(document.querySelectorAll('*')).find(e => e.textContent.trim() === '⚽ DSports' && e.offsetParent)?.click();
               });
               
-              if (!dsportsClicked) {
-                throw new Error('Failed to click DSports');
-              }
-              
-              console.log('✅ DSports clicked');
-              
-              console.log('▶️ Stream loading...');
-              console.log('⏳ Waiting 30 seconds...');
+              console.log('▶️ Waiting for stream...');
               await new Promise(r => setTimeout(r, 30000));
               
-              if (!realUrl) {
-                throw new Error('No URL captured');
-              }
+              if (!realUrl) throw new Error('No URL captured');
               
-              console.log('\n✅ CAPTURED: ' + realUrl.substring(0, 80) + '...\n');
+              console.log('\n✅ URL: ' + realUrl.substring(0, 80) + '...\n');
               
-              const htmlContent = fs.readFileSync('index.html', 'utf8');
-              const currentMatch = htmlContent.match(/const streamUrl = "([^"]+)"/);
-              const currentUrl = currentMatch ? currentMatch[1] : null;
+              const html = fs.readFileSync('index.html', 'utf8');
+              const current = html.match(/const streamUrl = "([^"]+)"/)?.[1];
               
-              if (currentUrl === realUrl) {
-                console.log('✅ URLs match - no update');
+              if (current === realUrl) {
+                console.log('✅ URLs match');
                 process.exit(0);
               }
               
-              console.log('🔄 Updating index.html...');
-              const updatedHtml = htmlContent.replace(
-                /const streamUrl = "[^"]*"/,
-                `const streamUrl = "${realUrl}"`
-              );
-              fs.writeFileSync('index.html', updatedHtml);
+              console.log('🔄 Updating...');
+              const updated = html.replace(/const streamUrl = "[^"]*"/, `const streamUrl = "${realUrl}"`);
+              fs.writeFileSync('index.html', updated);
               console.log('✅ Updated');
               process.exit(0);
               
@@ -158,13 +115,13 @@ jobs:
           })();
           EOF
 
-      - name: Commit and Push
+      - name: Commit & Push
         run: |
           if git diff --quiet index.html; then
             echo "✅ No changes"
           else
-            git config --local user.email "axiom-bot@github.com"
-            git config --local user.name "Axiom"
+            git config user.email "axiom-bot@github.com"
+            git config user.name "Axiom"
             git add index.html
             git commit -m "🔄 URL Updated $(date +'%H:%M')"
             git push origin main || git push origin master
