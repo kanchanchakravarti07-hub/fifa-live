@@ -1,0 +1,71 @@
+name: Health Check Monitor (Triggers Capture if Down)
+
+permissions:
+  contents: read
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Check If Stream URL Is Active
+        id: check
+        continue-on-error: true
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+          const https = require('https');
+          
+          const indexContent = fs.readFileSync('index.html', 'utf8');
+          const streamMatch = indexContent.match(/const streamUrl = "([^"]+)"/);
+          
+          if (!streamMatch) {
+            console.log('❌ No stream URL found in index.html');
+            process.exit(1);
+          }
+          
+          const streamUrl = streamMatch[1];
+          console.log('🔍 Checking if streamUrl is active...');
+          console.log('URL: ' + streamUrl.substring(0, 80) + '...\n');
+          
+          https.get(streamUrl, { timeout: 10000 }, (res) => {
+            if (res.statusCode >= 200 && res.statusCode < 400) {
+              console.log('✅ Stream is ACTIVE - Status: ' + res.statusCode);
+              console.log('No action needed\n');
+              process.exit(0);
+            } else {
+              console.log('❌ Stream returned bad status: ' + res.statusCode);
+              process.exit(1);
+            }
+          }).on('error', (err) => {
+            console.log('❌ Stream is DOWN - Error: ' + err.message);
+            process.exit(1);
+          });
+          EOF
+
+      - name: Trigger Capture Workflow
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log('🚨 Stream is down! Triggering capture workflow...');
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'dsports-capture.yml',
+              ref: 'main'
+            });
+            console.log('✅ Capture workflow triggered!');
