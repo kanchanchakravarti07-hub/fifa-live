@@ -1,0 +1,115 @@
+name: DSports URL Capture (API Direct)
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  capture-and-update:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Capture DSports URL from API
+        id: capture
+        run: |
+          node << 'EOF'
+          const https = require('https');
+          
+          console.log('🚀 CALLING API DIRECTLY\n');
+          
+          const url = 'https://iptv-eldbert.xyz/iptv/channels.json';
+          
+          https.get(url, (res) => {
+            let data = '';
+            
+            res.on('data', (chunk) => {
+              data += chunk;
+            });
+            
+            res.on('end', () => {
+              try {
+                console.log('✅ Got response from API');
+                const channels = JSON.parse(data);
+                
+                console.log('📺 Searching for DSports in FIFA World Cup...');
+                
+                let dsportsUrl = null;
+                
+                for (let channel of channels) {
+                  if (channel.group === 'FIFA World Cup' && channel.name.includes('DSports') && !channel.name.includes('Plus')) {
+                    dsportsUrl = channel.url;
+                    console.log('✅ Found DSports!');
+                    console.log('Name: ' + channel.name);
+                    console.log('Group: ' + channel.group);
+                    console.log('Status: ' + channel.status);
+                    break;
+                  }
+                }
+                
+                if (dsportsUrl) {
+                  console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                  console.log('✅✅✅ REAL DSPORTS URL ✅✅✅');
+                  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                  console.log(dsportsUrl);
+                  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+                  
+                  const fs = require('fs');
+                  fs.appendFileSync(process.env.GITHUB_OUTPUT, `stream_url=${dsportsUrl}\n`);
+                  process.exit(0);
+                } else {
+                  console.error('❌ DSports not found in FIFA World Cup channels');
+                  process.exit(1);
+                }
+                
+              } catch (err) {
+                console.error('❌ Error parsing JSON: ' + err.message);
+                process.exit(1);
+              }
+            });
+            
+          }).on('error', (err) => {
+            console.error('❌ Network error: ' + err.message);
+            process.exit(1);
+          });
+          EOF
+
+      - name: Update index.html
+        if: success()
+        run: |
+          CAPTURED_URL="${{ steps.capture.outputs.stream_url }}"
+          CURRENT_URL=$(grep -o 'const streamUrl = "[^"]*"' index.html | cut -d'"' -f2 || echo "EMPTY")
+          
+          echo "Current URL: $CURRENT_URL"
+          echo "Captured URL: $CAPTURED_URL"
+          
+          if [ "$CURRENT_URL" != "$CAPTURED_URL" ] && [ ! -z "$CAPTURED_URL" ]; then
+            echo "🔄 URL changed - updating"
+            sed -i "s|const streamUrl = \".*\"|const streamUrl = \"$CAPTURED_URL\"|g" index.html
+            echo "URL_UPDATED=true" >> $GITHUB_ENV
+          else
+            echo "✅ URL same - no update needed"
+            echo "URL_UPDATED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Commit and push
+        if: env.URL_UPDATED == 'true'
+        run: |
+          git config --local user.email "axiom-bot@github.com"
+          git config --local user.name "Axiom API Automator"
+          git add index.html
+          git commit -m "🔄 DSports URL updated via API [$(date +'%Y-%m-%d %H:%M:%S')]"
+          git push origin main
