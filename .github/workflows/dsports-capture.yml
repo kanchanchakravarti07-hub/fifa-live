@@ -1,0 +1,118 @@
+name: Capture DSports URL (Triggered by Health Check)
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+
+jobs:
+  capture-and-update:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Capture DSports URL from API
+        id: capture
+        run: |
+          node << 'EOF'
+          const https = require('https');
+          
+          console.log('🚨 CAPTURING NEW DSPORTS URL\n');
+          
+          const url = 'https://iptv-eldbert.xyz/iptv/channels.json';
+          
+          console.log('📡 Calling API: ' + url);
+          
+          https.get(url, (res) => {
+            let data = '';
+            
+            res.on('data', (chunk) => {
+              data += chunk;
+            });
+            
+            res.on('end', () => {
+              try {
+                console.log('✅ Got response from API\n');
+                const channels = JSON.parse(data);
+                
+                console.log('📺 Searching for DSports in FIFA World Cup...');
+                
+                let dsportsUrl = null;
+                
+                for (let channel of channels) {
+                  if (channel.group === 'FIFA World Cup' && channel.name.includes('DSports') && !channel.name.includes('Plus')) {
+                    dsportsUrl = channel.url;
+                    console.log('✅ Found DSports!');
+                    console.log('Name: ' + channel.name);
+                    console.log('Group: ' + channel.group);
+                    console.log('Status: ' + channel.status);
+                    break;
+                  }
+                }
+                
+                if (dsportsUrl) {
+                  const encodedUrl = encodeURIComponent(dsportsUrl);
+                  const proxyUrl = 'https://iptv-eldbert.xyz/proxy?url=' + encodedUrl;
+                  
+                  console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                  console.log('✅✅✅ NEW DSPORTS URL CAPTURED ✅✅✅');
+                  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                  console.log(proxyUrl);
+                  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+                  
+                  const fs = require('fs');
+                  fs.appendFileSync(process.env.GITHUB_OUTPUT, `stream_url=${proxyUrl}\n`);
+                  process.exit(0);
+                } else {
+                  console.error('❌ DSports not found in FIFA World Cup channels');
+                  process.exit(1);
+                }
+                
+              } catch (err) {
+                console.error('❌ Error parsing JSON: ' + err.message);
+                process.exit(1);
+              }
+            });
+            
+          }).on('error', (err) => {
+            console.error('❌ Network error: ' + err.message);
+            process.exit(1);
+          });
+          EOF
+
+      - name: Update index.html
+        if: success()
+        run: |
+          CAPTURED_URL="${{ steps.capture.outputs.stream_url }}"
+          CURRENT_URL=$(grep -o 'const streamUrl = "[^"]*"' index.html | cut -d'"' -f2 || echo "EMPTY")
+          
+          echo "Old URL: $CURRENT_URL"
+          echo "New URL: $CAPTURED_URL"
+          
+          if [ "$CURRENT_URL" != "$CAPTURED_URL" ] && [ ! -z "$CAPTURED_URL" ]; then
+            echo "🔄 Updating index.html with new URL"
+            sed -i "s|const streamUrl = \".*\"|const streamUrl = \"$CAPTURED_URL\"|g" index.html
+            echo "URL_UPDATED=true" >> $GITHUB_ENV
+          else
+            echo "✅ URL unchanged"
+            echo "URL_UPDATED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Commit and push
+        if: env.URL_UPDATED == 'true'
+        run: |
+          git config --local user.email "axiom-bot@github.com"
+          git config --local user.name "Axiom Capture Bot"
+          git add index.html
+          git commit -m "🚨 Stream recovered - New DSports URL captured [$(date +'%Y-%m-%d %H:%M:%S')]"
+          git push origin main
