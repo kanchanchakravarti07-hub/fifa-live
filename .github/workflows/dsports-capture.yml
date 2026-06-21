@@ -1,32 +1,4 @@
-name: DSports Real URL Capture & Update
-
-permissions:
-  contents: write
-
-on:
-  schedule:
-    - cron: '0 * * * *'
-  workflow_dispatch:
-
-jobs:
-  capture-and-update:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install Puppeteer & Dependencies
-        run: npm install puppeteer
-
-      - name: Capture Real DSports URL
+- name: Capture Real DSports URL
         id: capture
         run: |
           node << 'EOF'
@@ -86,14 +58,14 @@ jobs:
               await new Promise(resolve => setTimeout(resolve, 15000));
               
               console.log('🔍 Scrolling down to find DSports...');
-              for (let i = 0; i < 4; i++) {
+              for (let i = 0; i < 5; i++) {
                 await page.evaluate(() => {
                   window.scrollBy(0, 300);
                 });
                 await new Promise(resolve => setTimeout(resolve, 1500));
               }
               
-              console.log('4️⃣ Looking for DSports...');
+              console.log('4️⃣ Looking for DSports with flexible detection...');
               
               console.log('5️⃣ Clicking DSports...');
               let dsportsClicked = false;
@@ -104,15 +76,29 @@ jobs:
                   
                   for (let el of allElements) {
                     const text = el.textContent;
+                    const trimmed = text ? text.trim() : '';
                     
-                    if (text && text.includes('DSports') && !text.includes('Plus')) {
-                      const trimmed = text.trim();
-                      if (trimmed.length < 50 && el.offsetParent !== null) {
-                        try {
-                          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                          el.click();
-                          return true;
-                        } catch (e) {}
+                    // Multiple ways to match DSports - case insensitive, flexible
+                    const hasDSports = (
+                      trimmed.includes('DSports') ||
+                      trimmed.includes('dsports') ||
+                      trimmed.includes('Dsports') ||
+                      text.includes('⚽ DSports') ||
+                      text.includes('D') && text.includes('Sports')
+                    );
+                    
+                    // Make sure it's not Plus version and element is clickable
+                    const notPlus = !trimmed.includes('Plus') && !text.includes('Plus');
+                    const isVisible = el.offsetParent !== null;
+                    const isSmallEnough = trimmed.length < 100;
+                    
+                    if (hasDSports && notPlus && isVisible && isSmallEnough) {
+                      try {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        el.click();
+                        return true;
+                      } catch (e) {
+                        console.log('Click error:', e.message);
                       }
                     }
                   }
@@ -161,30 +147,3 @@ jobs:
             }
           })();
           EOF
-
-      - name: Update index.html
-        if: success()
-        run: |
-          CAPTURED_URL="${{ steps.capture.outputs.stream_url }}"
-          CURRENT_URL=$(grep -o 'const streamUrl = "[^"]*"' index.html | cut -d'"' -f2 || echo "EMPTY")
-          
-          echo "Current URL: $CURRENT_URL"
-          echo "Captured URL: $CAPTURED_URL"
-          
-          if [ "$CURRENT_URL" != "$CAPTURED_URL" ] && [ ! -z "$CAPTURED_URL" ]; then
-            echo "🔄 URL changed - updating"
-            sed -i "s|const streamUrl = \".*\"|const streamUrl = \"$CAPTURED_URL\"|g" index.html
-            echo "URL_UPDATED=true" >> $GITHUB_ENV
-          else
-            echo "✅ URL same - no update"
-            echo "URL_UPDATED=false" >> $GITHUB_ENV
-          fi
-
-      - name: Commit and push
-        if: env.URL_UPDATED == 'true'
-        run: |
-          git config --local user.email "axiom-bot@github.com"
-          git config --local user.name "Axiom Real URL Automator"
-          git add index.html
-          git commit -m "🔄 Real DSports URL updated [$(date +'%Y-%m-%d %H:%M:%S')]"
-          git push origin main
