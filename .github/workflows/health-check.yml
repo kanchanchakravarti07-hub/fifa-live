@@ -76,7 +76,7 @@ jobs:
               await new Promise(r => setTimeout(r, 7000));
               
               console.log('3️⃣ Scroll & Click DSports...');
-              for (let i = 0; i < 6; i++) {
+              for (let i = 0; i < 8; i++) {
                 await page.evaluate(() => window.scrollBy(0, 350));
                 await new Promise(r => setTimeout(r, 700));
               }
@@ -85,8 +85,8 @@ jobs:
                 Array.from(document.querySelectorAll('*')).find(e => e.textContent.trim() === '⚽ DSports' && e.offsetParent)?.click();
               });
               
-              console.log('▶️ Waiting for stream...');
-              await new Promise(r => setTimeout(r, 30000));
+              console.log('▶️ Waiting 45 seconds for stream...');
+              await new Promise(r => setTimeout(r, 45000));
               
               if (!realUrl) throw new Error('No URL captured');
               
