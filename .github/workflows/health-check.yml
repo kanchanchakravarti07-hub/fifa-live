@@ -1,32 +1,4 @@
-name: DSports Real URL Capture & Update
-
-permissions:
-  contents: write
-
-on:
-  schedule:
-    - cron: '0 * * * *'
-  workflow_dispatch:
-
-jobs:
-  capture-and-update:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install Puppeteer & Dependencies
-        run: npm install puppeteer
-
-      - name: Capture Real DSports URL
+- name: Capture Real DSports URL
         id: capture
         run: |
           node << 'EOF'
@@ -82,29 +54,37 @@ jobs:
               
               console.log('✅ FIFA clicked!');
               
-              console.log('⏳ Waiting 12 seconds for FIFA channels to load...');
-              await new Promise(resolve => setTimeout(resolve, 12000));
+              console.log('⏳ Waiting 15 seconds for FIFA channels to load...');
+              await new Promise(resolve => setTimeout(resolve, 15000));
               
               console.log('🔍 Scrolling down to find DSports...');
-              await page.evaluate(() => {
-                window.scrollBy(0, 400);
-              });
-              await new Promise(resolve => setTimeout(resolve, 2000));
+              for (let i = 0; i < 4; i++) {
+                await page.evaluate(() => {
+                  window.scrollBy(0, 300);
+                });
+                await new Promise(resolve => setTimeout(resolve, 1500));
+              }
               
               console.log('4️⃣ Looking for DSports...');
               
-              console.log('5️⃣ Clicking DSports...');
+              console.log('5️⃣ Clicking DSports with smart detection...');
               let dsportsClicked = false;
-              for (let attempt = 0; attempt < 3; attempt++) {
+              
+              for (let attempt = 0; attempt < 5; attempt++) {
                 dsportsClicked = await page.evaluate(() => {
-                  const elements = Array.from(document.querySelectorAll('*'));
-                  for (let el of elements) {
+                  const allElements = Array.from(document.querySelectorAll('*'));
+                  
+                  for (let el of allElements) {
                     const text = el.textContent;
-                    if (text.includes('⚽ DSports') && !text.includes('Plus') && text.length < 30) {
-                      if (el.offsetParent !== null) {
-                        el.scrollIntoView({ behavior: 'smooth' });
-                        el.click();
-                        return true;
+                    
+                    if (text && text.includes('DSports') && !text.includes('Plus')) {
+                      const trimmed = text.trim();
+                      if (trimmed.length < 50 && el.offsetParent !== null) {
+                        try {
+                          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          el.click();
+                          return true;
+                        } catch (e) {}
                       }
                     }
                   }
@@ -118,19 +98,19 @@ jobs:
                 
                 console.log('❌ Attempt ' + (attempt + 1) + ' failed, scrolling more...');
                 await page.evaluate(() => {
-                  window.scrollBy(0, 300);
+                  window.scrollBy(0, 250);
                 });
                 await new Promise(resolve => setTimeout(resolve, 2000));
               }
               
               if (!dsportsClicked) {
-                throw new Error('DSports click failed after 3 attempts');
+                throw new Error('DSports click failed after 5 attempts - element not found');
               }
               
               console.log('\n▶️ STREAM LOADING...');
-              console.log('⏳ Waiting 30 seconds for proxy URL...\n');
+              console.log('⏳ Waiting 35 seconds for proxy URL...\n');
               
-              await new Promise(resolve => setTimeout(resolve, 30000));
+              await new Promise(resolve => setTimeout(resolve, 35000));
               
               if (realUrl) {
                 console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -142,7 +122,7 @@ jobs:
                 const fs = require('fs');
                 fs.appendFileSync(process.env.GITHUB_OUTPUT, `stream_url=${realUrl}\n`);
               } else {
-                throw new Error('No URL captured after 30 seconds');
+                throw new Error('No URL captured after 35 seconds');
               }
               
             } catch (err) {
@@ -153,30 +133,3 @@ jobs:
             }
           })();
           EOF
-
-      - name: Update index.html
-        if: success()
-        run: |
-          CAPTURED_URL="${{ steps.capture.outputs.stream_url }}"
-          CURRENT_URL=$(grep -o 'const streamUrl = "[^"]*"' index.html | cut -d'"' -f2 || echo "EMPTY")
-          
-          echo "Current URL: $CURRENT_URL"
-          echo "Captured URL: $CAPTURED_URL"
-          
-          if [ "$CURRENT_URL" != "$CAPTURED_URL" ] && [ ! -z "$CAPTURED_URL" ]; then
-            echo "🔄 URL changed - updating"
-            sed -i "s|const streamUrl = \".*\"|const streamUrl = \"$CAPTURED_URL\"|g" index.html
-            echo "URL_UPDATED=true" >> $GITHUB_ENV
-          else
-            echo "✅ URL same - no update"
-            echo "URL_UPDATED=false" >> $GITHUB_ENV
-          fi
-
-      - name: Commit and push
-        if: env.URL_UPDATED == 'true'
-        run: |
-          git config --local user.email "axiom-bot@github.com"
-          git config --local user.name "Axiom Real URL Automator"
-          git add index.html
-          git commit -m "🔄 Real DSports URL updated [$(date +'%Y-%m-%d %H:%M:%S')]"
-          git push origin main
