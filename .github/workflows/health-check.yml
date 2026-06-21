@@ -37,9 +37,10 @@ jobs:
             
             const browser = await puppeteer.launch({ 
               headless: true,
-              args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security']
+              args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process']
             });
             const page = await browser.newPage();
+            await page.setViewport({ width: 1280, height: 720 });
             
             let realUrl = null;
             
@@ -68,42 +69,58 @@ jobs:
               await new Promise(r => setTimeout(r, 15000));
               
               console.log('2️⃣ Scrolling down...');
-              await page.evaluate(() => { window.scrollBy(0, 500); });
-              await new Promise(r => setTimeout(r, 2000));
+              for (let i = 0; i < 5; i++) {
+                await page.evaluate(() => { window.scrollBy(0, 200); });
+                await new Promise(r => setTimeout(r, 500));
+              }
               
               console.log('3️⃣ Clicking FIFA World Cup...');
-              await page.evaluate(() => {
-                const buttons = Array.from(document.querySelectorAll('button'));
-                const fifaBtn = buttons.find(b => b.textContent.includes('FIFA World Cup'));
-                if (fifaBtn) {
-                  fifaBtn.scrollIntoView({ behavior: 'smooth' });
-                  fifaBtn.click();
+              const fifaClicked = await page.evaluate(() => {
+                const buttons = Array.from(document.querySelectorAll('button, [role="button"]'));
+                for (let btn of buttons) {
+                  if (btn.textContent.includes('FIFA') && btn.textContent.includes('World Cup')) {
+                    btn.click();
+                    return true;
+                  }
                 }
+                return false;
               });
               
-              console.log('✅ FIFA clicked');
-              console.log('⏳ Waiting 12 seconds for FIFA channels...');
-              await new Promise(r => setTimeout(r, 12000));
+              if (fifaClicked) {
+                console.log('✅ FIFA clicked');
+              } else {
+                console.log('⚠️  FIFA not found, continuing anyway');
+              }
               
-              console.log('4️⃣ Scrolling to find DSports...');
-              await page.evaluate(() => { window.scrollBy(0, 400); });
-              await new Promise(r => setTimeout(r, 2000));
+              console.log('⏳ Waiting 15 seconds for FIFA channels...');
+              await new Promise(r => setTimeout(r, 15000));
               
-              console.log('5️⃣ Clicking DSports (with retry)...');
+              console.log('4️⃣ Heavy scrolling to find DSports...');
+              for (let i = 0; i < 8; i++) {
+                await page.evaluate(() => { window.scrollBy(0, 300); });
+                await new Promise(r => setTimeout(r, 800));
+              }
+              
+              console.log('5️⃣ Clicking DSports...');
               let dsportsClicked = false;
               
-              for (let attempt = 0; attempt < 3; attempt++) {
+              for (let attempt = 0; attempt < 5; attempt++) {
                 dsportsClicked = await page.evaluate(() => {
-                  const elements = Array.from(document.querySelectorAll('*'));
-                  for (let el of elements) {
-                    const text = el.textContent;
-                    if (text.includes('⚽ DSports') && 
+                  // Try multiple selectors
+                  const allElements = document.querySelectorAll('*');
+                  for (let el of allElements) {
+                    const text = el.textContent.trim();
+                    
+                    // Look for DSports with soccer ball emoji
+                    if ((text === '⚽ DSports' || text.startsWith('⚽ DSports')) && 
                         !text.includes('Plus') && 
-                        text.length < 30 && 
-                        el.offsetParent !== null) {
-                      el.scrollIntoView({ behavior: 'smooth' });
-                      el.click();
-                      return true;
+                        !text.includes('Uruguay')) {
+                      
+                      if (el.offsetParent !== null) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        el.click();
+                        return true;
+                      }
                     }
                   }
                   return false;
@@ -114,23 +131,21 @@ jobs:
                   break;
                 }
                 
-                if (attempt < 2) {
-                  console.log('Attempt ' + (attempt + 1) + ' failed, scrolling and retrying...');
-                  await page.evaluate(() => { window.scrollBy(0, 300); });
-                  await new Promise(r => setTimeout(r, 2000));
-                }
+                console.log('Attempt ' + (attempt + 1) + ' failed, scrolling more...');
+                await page.evaluate(() => { window.scrollBy(0, 400); });
+                await new Promise(r => setTimeout(r, 2000));
               }
               
               if (!dsportsClicked) {
-                throw new Error('Failed to click DSports after 3 attempts');
+                throw new Error('Failed to click DSports after 5 attempts');
               }
               
               console.log('▶️ Stream loading...');
-              console.log('⏳ Waiting 25 seconds for stream response...');
-              await new Promise(r => setTimeout(r, 25000));
+              console.log('⏳ Waiting 30 seconds for stream response...');
+              await new Promise(r => setTimeout(r, 30000));
               
               if (!realUrl) {
-                throw new Error('No stream URL captured after 25 seconds');
+                throw new Error('No stream URL captured after 30 seconds');
               }
               
               console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -138,21 +153,18 @@ jobs:
               console.log(realUrl.substring(0, 80) + '...');
               console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
               
-              // Read current index.html
               const htmlContent = fs.readFileSync('index.html', 'utf8');
               const currentMatch = htmlContent.match(/const streamUrl = "([^"]+)"/);
               const currentUrl = currentMatch ? currentMatch[1] : null;
               
               console.log('🔍 Comparing URLs...');
-              console.log('Current: ' + (currentUrl ? currentUrl.substring(0, 60) + '...' : 'NONE'));
-              console.log('Captured: ' + realUrl.substring(0, 60) + '...');
               
               if (currentUrl === realUrl) {
-                console.log('\n✅ URLs match - no update needed');
+                console.log('✅ URLs match - no update needed');
                 process.exit(0);
               }
               
-              console.log('\n🔄 URLs different - updating index.html...');
+              console.log('🔄 URLs different - updating index.html...');
               const updatedHtml = htmlContent.replace(
                 /const streamUrl = "[^"]*"/,
                 `const streamUrl = "${realUrl}"`
