@@ -1,4 +1,4 @@
-name: Stream Monitor & Auto Capture Combined
+name: DSports URL Capture (API Direct - Proxy Format)
 
 permissions:
   contents: write
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  monitor-and-capture:
+  capture-and-update:
     runs-on: ubuntu-latest
     
     steps:
@@ -23,49 +23,13 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Health Check - Is Stream Active
-        id: healthcheck
-        continue-on-error: true
-        run: |
-          node << 'EOF'
-          const fs = require('fs');
-          const https = require('https');
-          
-          const indexContent = fs.readFileSync('index.html', 'utf8');
-          const streamMatch = indexContent.match(/const streamUrl = "([^"]+)"/);
-          
-          if (!streamMatch) {
-            console.log('❌ No stream URL found');
-            process.exit(1);
-          }
-          
-          const streamUrl = streamMatch[1];
-          console.log('🔍 Checking stream...');
-          console.log('URL: ' + streamUrl.substring(0, 60) + '...\n');
-          
-          https.get(streamUrl, { timeout: 10000 }, (res) => {
-            if (res.statusCode >= 200 && res.statusCode < 400) {
-              console.log('✅ Stream is ACTIVE - Status: ' + res.statusCode);
-              console.log('No capture needed\n');
-              process.exit(0);
-            } else {
-              console.log('❌ Stream returned status: ' + res.statusCode);
-              process.exit(1);
-            }
-          }).on('error', (err) => {
-            console.log('❌ Stream is DOWN - ' + err.message);
-            process.exit(1);
-          });
-          EOF
-
       - name: Capture DSports URL from API
-        if: failure()
         id: capture
         run: |
           node << 'EOF'
           const https = require('https');
           
-          console.log('🚨 STREAM DOWN - CAPTURING NEW URL\n');
+          console.log('🚀 CALLING API DIRECTLY\n');
           
           const url = 'https://iptv-eldbert.xyz/iptv/channels.json';
           
@@ -97,6 +61,7 @@ jobs:
                 }
                 
                 if (dsportsUrl) {
+                  // Encode the URL for proxy format
                   const encodedUrl = encodeURIComponent(dsportsUrl);
                   const proxyUrl = 'https://iptv-eldbert.xyz/proxy?url=' + encodedUrl;
                   
@@ -127,7 +92,7 @@ jobs:
           EOF
 
       - name: Update index.html
-        if: success() && steps.capture.outcome == 'success'
+        if: success()
         run: |
           CAPTURED_URL="${{ steps.capture.outputs.stream_url }}"
           CURRENT_URL=$(grep -o 'const streamUrl = "[^"]*"' index.html | cut -d'"' -f2 || echo "EMPTY")
@@ -148,7 +113,7 @@ jobs:
         if: env.URL_UPDATED == 'true'
         run: |
           git config --local user.email "axiom-bot@github.com"
-          git config --local user.name "Axiom Auto Monitor"
+          git config --local user.name "Axiom API Automator"
           git add index.html
           git commit -m "🔄 DSports URL updated via API [$(date +'%Y-%m-%d %H:%M:%S')]"
           git push origin main
