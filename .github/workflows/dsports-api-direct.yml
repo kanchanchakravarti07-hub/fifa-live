@@ -1,4 +1,4 @@
-name: DSports URL Capture (API Direct)
+name: DSports URL Capture (API Direct - Proxy Format)
 
 permissions:
   contents: write
@@ -61,14 +61,18 @@ jobs:
                 }
                 
                 if (dsportsUrl) {
+                  // Encode the URL for proxy format
+                  const encodedUrl = encodeURIComponent(dsportsUrl);
+                  const proxyUrl = 'https://iptv-eldbert.xyz/proxy?url=' + encodedUrl;
+                  
                   console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-                  console.log('✅✅✅ REAL DSPORTS URL ✅✅✅');
+                  console.log('✅✅✅ PROXY URL ✅✅✅');
                   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-                  console.log(dsportsUrl);
+                  console.log(proxyUrl);
                   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
                   
                   const fs = require('fs');
-                  fs.appendFileSync(process.env.GITHUB_OUTPUT, `stream_url=${dsportsUrl}\n`);
+                  fs.appendFileSync(process.env.GITHUB_OUTPUT, `stream_url=${proxyUrl}\n`);
                   process.exit(0);
                 } else {
                   console.error('❌ DSports not found in FIFA World Cup channels');
