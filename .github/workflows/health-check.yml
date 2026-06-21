@@ -1,7 +1,8 @@
-name: Health Check Monitor (Triggers Capture if Down)
+name: Health Check Monitor (Triggers Capture If Down)
 
 permissions:
   contents: read
+  actions: write
 
 on:
   schedule:
@@ -58,14 +59,11 @@ jobs:
 
       - name: Trigger Capture Workflow
         if: failure()
-        uses: actions/github-script@v6
-        with:
-          script: |
-            console.log('🚨 Stream is down! Triggering capture workflow...');
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'dsports-capture.yml',
-              ref: 'main'
-            });
-            console.log('✅ Capture workflow triggered!');
+        run: |
+          echo "🚨 Stream is DOWN - Triggering capture workflow..."
+          curl -X POST https://api.github.com/repos/${{ github.repository }}/actions/workflows/dsports-capture.yml/dispatches \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{"ref":"main"}' \
+            -w "\nResponse Status: %{http_code}\n"
+          echo "✅ Capture workflow trigger sent!"
