@@ -37,7 +37,7 @@ jobs:
             
             const browser = await puppeteer.launch({ 
               headless: true,
-              args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security', '--disable-features=IsolateOrigins,site-per-process']
+              args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security']
             });
             const page = await browser.newPage();
             await page.setViewport({ width: 1280, height: 720 });
@@ -65,13 +65,13 @@ jobs:
                 timeout: 40000 
               });
               
-              console.log('⏳ Waiting 15 seconds for page load...');
-              await new Promise(r => setTimeout(r, 15000));
+              console.log('⏳ Waiting 8 seconds...');
+              await new Promise(r => setTimeout(r, 8000));
               
               console.log('2️⃣ Scrolling down...');
-              for (let i = 0; i < 5; i++) {
-                await page.evaluate(() => { window.scrollBy(0, 200); });
-                await new Promise(r => setTimeout(r, 500));
+              for (let i = 0; i < 3; i++) {
+                await page.evaluate(() => { window.scrollBy(0, 300); });
+                await new Promise(r => setTimeout(r, 600));
               }
               
               console.log('3️⃣ Clicking FIFA World Cup...');
@@ -86,19 +86,15 @@ jobs:
                 return false;
               });
               
-              if (fifaClicked) {
-                console.log('✅ FIFA clicked');
-              } else {
-                console.log('⚠️  FIFA not found, continuing anyway');
-              }
+              console.log(fifaClicked ? '✅ FIFA clicked' : '⚠️  FIFA click done');
               
-              console.log('⏳ Waiting 15 seconds for FIFA channels...');
-              await new Promise(r => setTimeout(r, 15000));
+              console.log('⏳ Waiting 7 seconds for FIFA channels...');
+              await new Promise(r => setTimeout(r, 7000));
               
-              console.log('4️⃣ Heavy scrolling to find DSports...');
-              for (let i = 0; i < 8; i++) {
-                await page.evaluate(() => { window.scrollBy(0, 300); });
-                await new Promise(r => setTimeout(r, 800));
+              console.log('4️⃣ Scrolling down for DSports...');
+              for (let i = 0; i < 6; i++) {
+                await page.evaluate(() => { window.scrollBy(0, 350); });
+                await new Promise(r => setTimeout(r, 700));
               }
               
               console.log('5️⃣ Clicking DSports...');
@@ -106,16 +102,13 @@ jobs:
               
               for (let attempt = 0; attempt < 5; attempt++) {
                 dsportsClicked = await page.evaluate(() => {
-                  // Try multiple selectors
                   const allElements = document.querySelectorAll('*');
                   for (let el of allElements) {
                     const text = el.textContent.trim();
                     
-                    // Look for DSports with soccer ball emoji
                     if ((text === '⚽ DSports' || text.startsWith('⚽ DSports')) && 
                         !text.includes('Plus') && 
                         !text.includes('Uruguay')) {
-                      
                       if (el.offsetParent !== null) {
                         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         el.click();
@@ -131,51 +124,45 @@ jobs:
                   break;
                 }
                 
-                console.log('Attempt ' + (attempt + 1) + ' failed, scrolling more...');
+                console.log('Attempt ' + (attempt + 1) + ' - scrolling more...');
                 await page.evaluate(() => { window.scrollBy(0, 400); });
                 await new Promise(r => setTimeout(r, 2000));
               }
               
               if (!dsportsClicked) {
-                throw new Error('Failed to click DSports after 5 attempts');
+                throw new Error('Failed to click DSports');
               }
               
               console.log('▶️ Stream loading...');
-              console.log('⏳ Waiting 30 seconds for stream response...');
+              console.log('⏳ Waiting 30 seconds...');
               await new Promise(r => setTimeout(r, 30000));
               
               if (!realUrl) {
-                throw new Error('No stream URL captured after 30 seconds');
+                throw new Error('No URL captured');
               }
               
-              console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-              console.log('📡 CAPTURED URL:');
-              console.log(realUrl.substring(0, 80) + '...');
-              console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+              console.log('\n✅ CAPTURED: ' + realUrl.substring(0, 80) + '...\n');
               
               const htmlContent = fs.readFileSync('index.html', 'utf8');
               const currentMatch = htmlContent.match(/const streamUrl = "([^"]+)"/);
               const currentUrl = currentMatch ? currentMatch[1] : null;
               
-              console.log('🔍 Comparing URLs...');
-              
               if (currentUrl === realUrl) {
-                console.log('✅ URLs match - no update needed');
+                console.log('✅ URLs match');
                 process.exit(0);
               }
               
-              console.log('🔄 URLs different - updating index.html...');
+              console.log('🔄 Updating index.html...');
               const updatedHtml = htmlContent.replace(
                 /const streamUrl = "[^"]*"/,
                 `const streamUrl = "${realUrl}"`
               );
-              
               fs.writeFileSync('index.html', updatedHtml);
-              console.log('✅ index.html updated');
+              console.log('✅ Updated');
               process.exit(0);
               
             } catch (err) {
-              console.error('\n❌ ERROR: ' + err.message);
+              console.error('❌ ' + err.message);
               process.exit(1);
             } finally {
               await browser.close();
@@ -183,16 +170,14 @@ jobs:
           })();
           EOF
 
-      - name: Commit and Push Changes
+      - name: Commit and Push
         run: |
           if git diff --quiet index.html; then
-            echo "✅ No changes to commit"
+            echo "✅ No changes"
           else
-            echo "📝 Changes detected - committing..."
             git config --local user.email "axiom-bot@github.com"
-            git config --local user.name "Axiom Auto-Update"
+            git config --local user.name "Axiom"
             git add index.html
-            git commit -m "🔄 Stream URL Auto-Updated [$(date +'%Y-%m-%d %H:%M:%S')]"
+            git commit -m "🔄 URL Updated $(date +'%H:%M')"
             git push origin main || git push origin master
-            echo "✅ Changes pushed to repo"
           fi
