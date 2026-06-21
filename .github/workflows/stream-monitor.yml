@@ -1,0 +1,154 @@
+name: Stream Monitor & Auto Capture Combined
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  monitor-and-capture:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Health Check - Is Stream Active
+        id: healthcheck
+        continue-on-error: true
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+          const https = require('https');
+          
+          const indexContent = fs.readFileSync('index.html', 'utf8');
+          const streamMatch = indexContent.match(/const streamUrl = "([^"]+)"/);
+          
+          if (!streamMatch) {
+            console.log('❌ No stream URL found');
+            process.exit(1);
+          }
+          
+          const streamUrl = streamMatch[1];
+          console.log('🔍 Checking stream...');
+          console.log('URL: ' + streamUrl.substring(0, 60) + '...\n');
+          
+          https.get(streamUrl, { timeout: 10000 }, (res) => {
+            if (res.statusCode >= 200 && res.statusCode < 400) {
+              console.log('✅ Stream is ACTIVE - Status: ' + res.statusCode);
+              console.log('No capture needed\n');
+              process.exit(0);
+            } else {
+              console.log('❌ Stream returned status: ' + res.statusCode);
+              process.exit(1);
+            }
+          }).on('error', (err) => {
+            console.log('❌ Stream is DOWN - ' + err.message);
+            process.exit(1);
+          });
+          EOF
+
+      - name: Capture DSports URL from API
+        if: failure()
+        id: capture
+        run: |
+          node << 'EOF'
+          const https = require('https');
+          
+          console.log('🚨 STREAM DOWN - CAPTURING NEW URL\n');
+          
+          const url = 'https://iptv-eldbert.xyz/iptv/channels.json';
+          
+          https.get(url, (res) => {
+            let data = '';
+            
+            res.on('data', (chunk) => {
+              data += chunk;
+            });
+            
+            res.on('end', () => {
+              try {
+                console.log('✅ Got response from API');
+                const channels = JSON.parse(data);
+                
+                console.log('📺 Searching for DSports in FIFA World Cup...');
+                
+                let dsportsUrl = null;
+                
+                for (let channel of channels) {
+                  if (channel.group === 'FIFA World Cup' && channel.name.includes('DSports') && !channel.name.includes('Plus')) {
+                    dsportsUrl = channel.url;
+                    console.log('✅ Found DSports!');
+                    console.log('Name: ' + channel.name);
+                    console.log('Group: ' + channel.group);
+                    console.log('Status: ' + channel.status);
+                    break;
+                  }
+                }
+                
+                if (dsportsUrl) {
+                  const encodedUrl = encodeURIComponent(dsportsUrl);
+                  const proxyUrl = 'https://iptv-eldbert.xyz/proxy?url=' + encodedUrl;
+                  
+                  console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                  console.log('✅✅✅ PROXY URL ✅✅✅');
+                  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                  console.log(proxyUrl);
+                  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+                  
+                  const fs = require('fs');
+                  fs.appendFileSync(process.env.GITHUB_OUTPUT, `stream_url=${proxyUrl}\n`);
+                  process.exit(0);
+                } else {
+                  console.error('❌ DSports not found in FIFA World Cup channels');
+                  process.exit(1);
+                }
+                
+              } catch (err) {
+                console.error('❌ Error parsing JSON: ' + err.message);
+                process.exit(1);
+              }
+            });
+            
+          }).on('error', (err) => {
+            console.error('❌ Network error: ' + err.message);
+            process.exit(1);
+          });
+          EOF
+
+      - name: Update index.html
+        if: success() && steps.capture.outcome == 'success'
+        run: |
+          CAPTURED_URL="${{ steps.capture.outputs.stream_url }}"
+          CURRENT_URL=$(grep -o 'const streamUrl = "[^"]*"' index.html | cut -d'"' -f2 || echo "EMPTY")
+          
+          echo "Current URL: $CURRENT_URL"
+          echo "Captured URL: $CAPTURED_URL"
+          
+          if [ "$CURRENT_URL" != "$CAPTURED_URL" ] && [ ! -z "$CAPTURED_URL" ]; then
+            echo "🔄 URL changed - updating"
+            sed -i "s|const streamUrl = \".*\"|const streamUrl = \"$CAPTURED_URL\"|g" index.html
+            echo "URL_UPDATED=true" >> $GITHUB_ENV
+          else
+            echo "✅ URL same - no update needed"
+            echo "URL_UPDATED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Commit and push
+        if: env.URL_UPDATED == 'true'
+        run: |
+          git config --local user.email "axiom-bot@github.com"
+          git config --local user.name "Axiom Auto Monitor"
+          git add index.html
+          git commit -m "🔄 DSports URL updated via API [$(date +'%Y-%m-%d %H:%M:%S')]"
+          git push origin main
