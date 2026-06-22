@@ -158,52 +158,42 @@ gap: 8px;
 
 <!-- SUPPORT US BANNER -->
 <div id="support-banner" onclick="openSupportLink(event)">
-  <span>❤️ Support Us — Just Click</span>
+  <span>❤️ Support Us — Just Click</span>
 </div>
 
 <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 <script>
 // ===== Player setup with Referer Header Bypass + buffer tuning =====
-// ===== Player setup with stability-focused tuning =====
 const player = videojs('my-video', {
-  controls: false,
-  autoplay: false,
-  liveui: true,
-  html5: {
-    nativeAudioTracks: false,
-    nativeVideoTracks: false,
-    vhs: {
-      // REDUCED BUFFER: Prevents the "stuck" feeling
-      // We want to download small, quick segments rather than a giant chunk
-      GOAL_BUFFER_LENGTH: 10,
-      MAX_GOAL_BUFFER_LENGTH: 20,
-      BACK_BUFFER_LENGTH: 5,
-      
-      // Forces faster recovery after a network dip
-      bandwidth: 1500000, 
-      enableLowInitialPlaylist: true,
-      
-      // CRITICAL: This reduces the "stutter" during quality switches
-      smoothQualityChange: true,
-      fastQualityChange: true,
-      
-      // Sometimes HLS segments get "stuck" in the buffer
-      // This setting forces the player to clear the buffer if it stalls
-      overrideNative: true
-    },
-    hls: {
-      beforeRequest: function(options) {
-        options.headers = {
-          ...options.headers,
-          'Referer': 'https://iptv-eldbert.xyz/'
-        };
-        return options;
-      }
-    }
-  }
+controls: false,
+autoplay: false,
+liveui: false,
+html5: {
+vhs: {
+// keep more video buffered ahead so weak networks stutter less
+GOAL_BUFFER_LENGTH: 30,
+MAX_GOAL_BUFFER_LENGTH: 60,
+BACK_BUFFER_LENGTH: 30,
+// allow a bit of back-buffer so small pauses don't force a hard reset
+bandwidth: 4194304,
+enableLowInitialPlaylist: true,
+useDevicePixelRatio: true
+},
+hls: {
+beforeRequest: function(options) {
+options.headers = {
+...options.headers,
+'Referer': 'https://iptv-eldbert.xyz/'
+};
+return options;
+}
+}
+}
 });
+
 // ===== Stream link (AUTO-UPDATED BY GITHUB WORKFLOW - DO NOT EDIT MANUALLY) =====
-const streamUrl = "https://iptv-eldbert.xyz/proxy?url=https%3A%2F%2Fag9wzq.fubo18.com%3A443%2Fdsports%2Fmono.m3u8%3Ftoken%3Daa9f75656be651a923165ad9b2cfa7d315b70974-4-1782164840-1782146840";
+const streamUrl = "https://iptv-eldbert.xyz/proxy?url=https%3A%2F%2Fdglvz29s.fubo18.com%3A443%2Fdsports%2Fmono.m3u8%3Ftoken%3D2fd2e5c03bd116305e521909d7a9ada16f98e251-84-1782173804-1782155804
+";
 
 // ===== Adsterra smart link =====
 const AD_SMARTLINK = "https://www.effectivecpmnetwork.com/iyj82vg6?key=6a0d8977ddd973a097989e53a0e27ce4";
@@ -211,33 +201,27 @@ const AD_SMARTLINK = "https://www.effectivecpmnetwork.com/iyj82vg6?key=6a0d8977d
 const adGate = document.getElementById('ad-gate');
 let streamLoaded = false;
 
-// Replace your existing adGate.addEventListener block with this:
-// ... all your functions ...
+adGate.addEventListener('click', () => {
+window.open(AD_SMARTLINK, '_blank');
+adGate.style.display = 'none';
 
-// Ensure this block is closed correctly:
-adGate.addEventListener('click', (e) => {
-    e.stopPropagation();
-    window.open(AD_SMARTLINK, '_blank');
-    adGate.remove(); 
+if (!streamLoaded) {
+streamLoaded = true;
+player.src({ src: streamUrl, type: 'application/x-mpegURL' });
+}
 
-    if (!streamLoaded) {
-        streamLoaded = true;
-        player.src({
-            src: 'https://fifa-live-2pea.vercel.app/api/proxy?url=https://1nyaler.streamhostingcdn.top/stream/94/index.m3u8',
-            type: 'application/x-mpegURL'
-        });
-    }
-
-    player.muted(true);
-    player.play().then(() => {
-        setTimeout(() => { player.muted(false); }, 1000);
-    }).catch(err => console.error(err));
-    
-    showUI();
-}); // <--- Make sure this closing brace is here!
-
-// ... rest of your helper functions ...
-
+player.muted(false);
+const p = player.play();
+if (p && p.catch) {
+p.catch(() => {
+player.muted(true);
+player.play();
+updateMuteIcon();
+});
+}
+updateMuteIcon();
+showUI();
+});
 
 function openSupportLink(e) {
 if (e) e.stopPropagation();
