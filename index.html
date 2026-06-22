@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stream Master Player</title>
+    <link rel="preconnect" href="https://otte-qw.live.pv-cdn.net">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/controls.css">
+    
+    <style>
+        body { margin: 0; background: #000; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .shaka-video-container { width: 100%; max-width: 1000px; }
+    </style>
+</head>
+<body>
+
+<div class="shaka-video-container" data-shaka-player-container>
+    <video autoplay playsinline data-shaka-player id="video" style="width:100%; height:100%"></video>
+</div>
+
+<script>
+    const manifestUri = "https://otte-qw.live.pv-cdn.net/gru-nitro/live/clients/dash/enc/3gg2jnixjn/out/v1/e1840e01f3f14563b66bbb944d5cc54c/cenc.mpd";
+
+    async function initPlayer() {
+        const video = document.getElementById('video');
+        const videoContainer = document.querySelector('.shaka-video-container');
+        const player = new shaka.Player(video);
+        
+        // 1. Initialize UI (this removes the big numbers and adds the Live UI)
+        const ui = new shaka.ui.Overlay(player, videoContainer, video);
+        
+        // 2. Configure for speed
+        player.configure({
+    manifest: {
+        dash: {
+            ignoreMinBufferTime: true, // Forces the player to ignore the server's requested buffer time
+            clockSyncUri: 'https://worldtimeapi.org/api/timezone/Etc/UTC' // Fixes clock sync issues which cause long startup delays
+        }
+    },
+    streaming: {
+        rebufferingGoal: 0.5, // Start playing after only 0.5s of data
+        bufferingGoal: 2,     // Keep a small buffer to stay at the live edge
+        liveSyncMargin: 0.1   // Stay as close to the live edge as possible
+    },
+    drm: {
+        clearKeys: { 
+            'f8b207c10f3f76aeba32a360ec52b9e4': 'afad49d20eb39670e93e371c1d669921' 
+        }
+    }
+});
+
+        // 3. Network headers to prevent 401
+        player.getNetworkingEngine().registerRequestFilter((type, request) => {
+            if (type === shaka.net.NetworkingEngine.RequestType.MANIFEST || 
+                type === shaka.net.NetworkingEngine.RequestType.SEGMENT) {
+                request.headers['Referer'] = 'https://tushar-stream-liart.vercel.app/';
+                request.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)';
+            }
+        });
+
+        // 4. Load
+        try {
+            await player.load(manifestUri);
+            // Force snap to live every 5 seconds
+setInterval(() => {
+    const liveEdge = player.seekable().end(0);
+    if (liveEdge - player.currentTime() > 2) {
+        player.currentTime(liveEdge);
+    }
+}, 5000);
+            console.log("Stream is playing with UI enabled!");
+        } catch (e) {
+            console.error("Load failed:", e);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', initPlayer);
+</script>
+</body>
+</html>
