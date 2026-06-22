@@ -211,16 +211,36 @@ const AD_SMARTLINK = "https://www.effectivecpmnetwork.com/iyj82vg6?key=6a0d8977d
 const adGate = document.getElementById('ad-gate');
 let streamLoaded = false;
 
+// Replace your existing adGate.addEventListener block with this:
 adGate.addEventListener('click', () => {
-window.open(AD_SMARTLINK, '_blank');
-adGate.style.display = 'none';
+    window.open(AD_SMARTLINK, '_blank');
+    
+    // 1. Hide AND move it out of the way
+    adGate.style.display = 'none';
+    adGate.style.zIndex = '-1'; 
 
-if (!streamLoaded) {
-streamLoaded = true;
-// Ensure you are using Video.js and that the type is set to 'application/x-mpegURL'
-player.src({
-    src: 'https://fifa-live-2pea.vercel.app/api/proxy?url=https://1nyaler.streamhostingcdn.top/stream/94/index.m3u8',
-    type: 'application/x-mpegURL' 
+    if (!streamLoaded) {
+        streamLoaded = true;
+        player.src({
+            src: 'https://fifa-live-2pea.vercel.app/api/proxy?url=https://1nyaler.streamhostingcdn.top/stream/94/index.m3u8',
+            type: 'application/x-mpegURL' 
+        });
+    }
+
+    // 2. Start muted first to satisfy browser autoplay policies
+    player.muted(true); 
+    player.play().then(() => {
+        console.log("Started playing muted");
+        // 3. Briefly delay unmuting
+        setTimeout(() => {
+            player.muted(false);
+            updateMuteIcon();
+        }, 1000);
+    }).catch(err => {
+        console.error("Play failed:", err);
+    });
+    
+    showUI();
 });
 
 player.muted(false);
