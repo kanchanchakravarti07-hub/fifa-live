@@ -34,14 +34,21 @@
         player.configure({
     manifest: {
         dash: {
-            ignoreMinBufferTime: true, // Forces the player to ignore the server's requested buffer time
-            clockSyncUri: 'https://worldtimeapi.org/api/timezone/Etc/UTC' // Fixes clock sync issues which cause long startup delays
+            ignoreMinBufferTime: true,
+            clockSyncUri: 'https://worldtimeapi.org/api/timezone/Etc/UTC'
         }
     },
     streaming: {
-        rebufferingGoal: 0.5, // Start playing after only 0.5s of data
-        bufferingGoal: 2,     // Keep a small buffer to stay at the live edge
-        liveSyncMargin: 0.1   // Stay as close to the live edge as possible
+        // Start fast (0.5s), but grow the buffer to 10s for stability
+        rebufferingGoal: 0.5, 
+        bufferingGoal: 10,   
+        bufferBehind: 5,      // Keep 5s of history for smooth seeking
+        liveSyncMargin: 1.5,  // Increased slightly to 1.5s for better stability
+        jumpLargeGaps: true
+    },
+    abr: {
+        enabled: true,
+        defaultBandwidthEstimate: 5e6 // Start at 5Mbps for better initial quality
     },
     drm: {
         clearKeys: { 
