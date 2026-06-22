@@ -217,8 +217,11 @@ adGate.style.display = 'none';
 
 if (!streamLoaded) {
 streamLoaded = true;
-player.src({ src: streamUrl, type: 'application/x-mpegURL' });
-}
+// Ensure you are using Video.js and that the type is set to 'application/x-mpegURL'
+player.src({
+    src: 'https://fifa-live-2pea.vercel.app/api/proxy?url=https://1nyaler.streamhostingcdn.top/stream/94/index.m3u8',
+    type: 'application/x-mpegURL' 
+});
 
 player.muted(false);
 const p = player.play();
