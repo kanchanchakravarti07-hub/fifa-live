@@ -117,7 +117,7 @@ gap: 8px;
 <body>
 <div id="video-wrapper">
 <video
-    id="my-video"
+    id="my-video_html5_api"
     class="video-js"
     playsinline
     webkit-playsinline
@@ -125,7 +125,6 @@ gap: 8px;
     x5-video-player-fullscreen="true">
 </video>
 
-<!-- AD GATE: shown first, stream doesn't start till user taps -->
 <div id="ad-gate">
 <div id="ad-gate-btn">
 <svg viewBox="0 0 24 24" fill="#000"><polygon points="6,4 20,12 6,20"/></svg>
@@ -163,7 +162,6 @@ gap: 8px;
 
 </div>
 
-<!-- SUPPORT US BANNER -->
 <div id="support-banner" onclick="openSupportLink(event)">
   <span>❤️ Support Us — Just Click</span>
 </div>
@@ -171,17 +169,15 @@ gap: 8px;
 <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 <script>
 // ===== Player setup with Referer Header Bypass + buffer tuning =====
-const player = videojs('my-video', {
+const player = videojs('my-video_html5_api', {
 controls: false,
 autoplay: false,
 liveui: false,
 html5: {
 vhs: {
-// keep more video buffered ahead so weak networks stutter less
 GOAL_BUFFER_LENGTH: 30,
 MAX_GOAL_BUFFER_LENGTH: 60,
 BACK_BUFFER_LENGTH: 30,
-// allow a bit of back-buffer so small pauses don't force a hard reset
 bandwidth: 4194304,
 enableLowInitialPlaylist: true,
 useDevicePixelRatio: true
@@ -198,7 +194,7 @@ return options;
 }
 });
 
-// ===== Stream link (AUTO-UPDATED BY GITHUB WORKFLOW - DO NOT EDIT MANUALLY) =====
+// ===== Stream link =====
 const streamUrl = "https://iptv-eldbert.xyz/proxy?url=https%3A%2F%2Fa2vlca.fubo18.com%3A443%2Fdsports%2Fmono.m3u8%3Ftoken%3D3dfd8c4f4a103e72bd9e71b1a5a58cbb379164d1-63-1782238606-1782220606";
 
 // ===== Adsterra smart link =====
@@ -249,31 +245,44 @@ icon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 8.5a5 5 0 0 1 
 }
 }
 
+// ===== FIXED FULLSCREEN AND ROTATION FOR MOBILE =====
 async function goFullscreen(e) {
     if (e) e.stopPropagation();
 
-    const video = document.getElementById('my-video');
     const wrapper = document.getElementById('video-wrapper');
+    const video = document.getElementById('my-video_html5_api');
 
+    // Check if Safari / iOS native webkit fullscreen is available first (Crucial for iPhones)
+    if (video.webkitEnterFullscreen) {
+        try {
+            video.webkitEnterFullscreen();
+            return;
+        } catch(err) {
+            console.log("iOS Fullscreen error fallback:", err);
+        }
+    }
+
+    // Standard API approach for Android and Desktops
     try {
         if (!document.fullscreenElement) {
-
-            if (video.requestFullscreen) {
-                await video.requestFullscreen();
-            } else if (wrapper.requestFullscreen) {
+            if (wrapper.requestFullscreen) {
                 await wrapper.requestFullscreen();
-            } else if (video.webkitEnterFullscreen) {
-                video.webkitEnterFullscreen(); // iPhone Safari
+            } else if (video.requestFullscreen) {
+                await video.requestFullscreen();
             }
 
+            // Force landscape rotation on supported engines (Android Chrome, etc.)
             if (screen.orientation && screen.orientation.lock) {
                 try {
                     await screen.orientation.lock('landscape');
-                } catch(err) {}
+                } catch(orientationErr) {
+                    console.log("Orientation lock rejected:", orientationErr);
+                }
             }
-
         } else {
-            await document.exitFullscreen();
+            if (document.exitFullscreen) {
+                await document.exitFullscreen();
+            }
         }
     } catch(err) {
         console.log('Fullscreen error:', err);
@@ -290,9 +299,7 @@ const bufferSpinner = document.getElementById('buffer-spinner');
 function setPauseIcon(svg) { svg.innerHTML = '<rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/>'; }
 function setPlayIcon(svg) { svg.innerHTML = '<polygon points="6,4 20,12 6,20"/>'; }
 
-// Only snap to live edge if user has drifted far behind (e.g. long pause / heavy buffering).
-// A short pause/resume just continues from where it was — much smoother, no jump/stutter feeling.
-const LIVE_DRIFT_THRESHOLD = 15; // seconds behind live edge before we force a jump
+const LIVE_DRIFT_THRESHOLD = 15;
 
 function maybeCatchUpToLive() {
 try {
@@ -301,7 +308,7 @@ if (seekable && seekable.length) {
 const liveEdge = seekable.end(seekable.length - 1);
 const current = player.currentTime();
 if (liveEdge - current > LIVE_DRIFT_THRESHOLD) {
-player.currentTime(liveEdge - 2); // land just slightly behind true edge for stability
+player.currentTime(liveEdge - 2);
 }
 }
 } catch (e) {}
@@ -329,12 +336,10 @@ setPlayIcon(playBtn.querySelector('svg'));
 showUI(true);
 });
 
-// show a spinner while buffering/stalling so it doesn't look "stuck"
 player.on('waiting', () => bufferSpinner.classList.add('show'));
 player.on('playing', () => bufferSpinner.classList.remove('show'));
 player.on('canplay', () => bufferSpinner.classList.remove('show'));
 
-/* ---- Auto-hide UI logic ---- */
 let hideTimer = null;
 function showUI(persist) {
 centerBtn.classList.add('show');
@@ -350,25 +355,21 @@ controls.classList.remove('show');
 }
 }
 
-/* ---- Tap anywhere = play/pause, Double-tap = fullscreen (works on laptop too) ---- */
 let lastTapTime = 0;
 let singleTapTimer = null;
 
 function handleWrapperTap(e) {
-// ignore taps on the controls bar / buttons, they handle themselves
 if (e.target.closest('#controls') || e.target.closest('#ad-gate') || e.target.closest('#support-banner')) return;
 
 const now = Date.now();
 const delta = now - lastTapTime;
 
 if (delta > 0 && delta < 350) {
-// double tap/click detected
 clearTimeout(singleTapTimer);
 lastTapTime = 0;
 goFullscreen();
 } else {
 lastTapTime = now;
-// wait briefly to see if a second tap comes in before treating as single tap
 singleTapTimer = setTimeout(() => {
 togglePlay();
 }, 300);
