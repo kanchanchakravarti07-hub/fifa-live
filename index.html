@@ -116,7 +116,14 @@ gap: 8px;
 </head>
 <body>
 <div id="video-wrapper">
-<video id="my-video" class="video-js" playsinline></video>
+<video
+    id="my-video"
+    class="video-js"
+    playsinline
+    webkit-playsinline
+    x5-video-player-type="h5"
+    x5-video-player-fullscreen="true">
+</video>
 
 <!-- AD GATE: shown first, stream doesn't start till user taps -->
 <div id="ad-gate">
@@ -242,16 +249,35 @@ icon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 8.5a5 5 0 0 1 
 }
 }
 
-function goFullscreen(e) {
-if (e) e.stopPropagation();
-const el = document.getElementById('video-wrapper');
-if (!document.fullscreenElement) {
-if (el.requestFullscreen) el.requestFullscreen();
-else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-} else {
-if (document.exitFullscreen) document.exitFullscreen();
-else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-}
+async function goFullscreen(e) {
+    if (e) e.stopPropagation();
+
+    const video = document.getElementById('my-video');
+    const wrapper = document.getElementById('video-wrapper');
+
+    try {
+        if (!document.fullscreenElement) {
+
+            if (video.requestFullscreen) {
+                await video.requestFullscreen();
+            } else if (wrapper.requestFullscreen) {
+                await wrapper.requestFullscreen();
+            } else if (video.webkitEnterFullscreen) {
+                video.webkitEnterFullscreen(); // iPhone Safari
+            }
+
+            if (screen.orientation && screen.orientation.lock) {
+                try {
+                    await screen.orientation.lock('landscape');
+                } catch(err) {}
+            }
+
+        } else {
+            await document.exitFullscreen();
+        }
+    } catch(err) {
+        console.log('Fullscreen error:', err);
+    }
 }
 
 const centerBtn = document.getElementById('center-btn');
