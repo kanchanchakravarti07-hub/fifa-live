@@ -3,290 +3,238 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="referrer" content="no-referrer-when-downgrade">
 <title>Stream Master Player</title>
-<link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
 <style>
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { background: #000; margin: 0; height: 100%; overflow: hidden; font-family: -apple-system, Helvetica, sans-serif; display: flex; flex-direction: column; }
-#video-wrapper { position: relative; width: 100vw; flex: 1; overflow: hidden; }
-.video-js { width: 100% !important; height: 100% !important; }
-/* hide all default video.js UI, we use our own */
-.vjs-control-bar, .vjs-big-play-button, .vjs-loading-spinner, .vjs-poster { display: none !important; }
+
+#video-wrapper { 
+    position: relative; 
+    width: 100vw; 
+    flex: 1; 
+    overflow: hidden; 
+    z-index: 10;
+    background: #000;
+}
+
+video { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain;
+    background: #000;
+}
 
 /* AD GATE OVERLAY */
 #ad-gate {
-position: absolute; inset: 0; background: #000;
-display: flex; align-items: center; justify-content: center;
-z-index: 50; cursor: pointer;
+    position: absolute; inset: 0; background: #000;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 500; cursor: pointer;
 }
 #ad-gate-btn {
-width: 90px; height: 90px; border-radius: 50%;
-background: rgba(255,255,255,0.95);
-display: flex; align-items: center; justify-content: center;
-box-shadow: 0 0 0 8px rgba(255,255,255,0.08);
+    width: 90px; height: 90px; border-radius: 50%;
+    background: rgba(255,255,255,0.95);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 8px rgba(255,255,255,0.08);
 }
 #ad-gate-btn svg { width: 34px; height: 34px; margin-left: 4px; }
 
-/* Center big play/pause button */
+/* Center Button */
 #center-btn {
-position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-width: 80px; height: 80px; border-radius: 50%;
-background: rgba(255,255,255,0.92);
-display: flex; align-items: center; justify-content: center;
-cursor: pointer; opacity: 0; pointer-events: none;
-transition: opacity 0.25s ease; z-index: 20;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 80px; height: 80px; border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease; z-index: 400;
 }
 #center-btn.show { opacity: 1; pointer-events: auto; }
 #center-btn svg { width: 32px; height: 32px; }
 
-/* Bottom controls bar */
+/* Bottom Control Bar */
 #controls {
-position: absolute; bottom: 0; left: 0; right: 0;
-padding: 30px 16px 12px 16px;
-background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-opacity: 0; transition: opacity 0.25s ease;
-pointer-events: none; z-index: 20;
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 30px 16px 12px 16px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    opacity: 0; transition: opacity 0.25s ease;
+    pointer-events: none; z-index: 450;
 }
 #controls.show { opacity: 1; pointer-events: auto; }
 
 .progress-row { position: relative; height: 14px; display: flex; align-items: center; margin-bottom: 6px; }
-#progress-track {
-position: relative; width: 100%; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; overflow: hidden;
-}
-#progress-fill {
-position: absolute; left: 0; top: 0; height: 100%; background: #e50914; border-radius: 2px; width: 100%;
-}
-#live-dot {
-position: absolute; right: -2px; top: 50%; transform: translateY(-50%);
-width: 10px; height: 10px; border-radius: 50%; background: #e50914;
-box-shadow: 0 0 0 3px rgba(229,9,20,0.25);
-}
+#progress-track { position: relative; width: 100%; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; overflow: hidden; }
+#progress-fill { position: absolute; left: 0; top: 0; height: 100%; background: #e50914; border-radius: 2px; width: 100%; }
+#live-dot { position: absolute; right: -2px; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; border-radius: 50%; background: #e50914; box-shadow: 0 0 0 3px rgba(229,9,20,0.25); }
 
 .controls-row { display: flex; align-items: center; justify-content: space-between; color: #fff; }
 .controls-left, .controls-right { display: flex; align-items: center; gap: 14px; }
-.icon-btn { background: none; border: none; color: #fff; cursor: pointer; padding: 6px; display: flex; align-items: center; touch-action: manipulation; }
+.icon-btn { background: none; border: none; color: #fff; cursor: pointer; padding: 6px; display: flex; align-items: center; }
 .icon-btn svg { width: 20px; height: 20px; }
 
 .live-label { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; color: #fff; }
 .live-label .dot { width: 8px; height: 8px; border-radius: 50%; background: #e50914; }
 
-/* Buffering spinner */
 #buffer-spinner {
-position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-width: 48px; height: 48px; border-radius: 50%;
-border: 4px solid rgba(255,255,255,0.25);
-border-top-color: #fff;
-display: none; z-index: 15;
-animation: spin 0.8s linear infinite;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.25); border-top-color: #fff;
+    display: none; z-index: 350; animation: spin 0.8s linear infinite;
 }
 #buffer-spinner.show { display: block; }
 @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
 
-/* SUPPORT US BANNER */
 #support-banner {
-background: linear-gradient(to right, #6b2121, #4a1515);
-color: #ff6b6b;
-padding: 16px 16px;
-text-align: center;
-font-size: 14px;
-font-weight: 600;
-cursor: pointer;
-border-top: 2px solid rgba(255, 107, 107, 0.3);
-transition: all 0.2s ease;
-letter-spacing: 0.4px;
-flex-shrink: 0;
-}
-#support-banner:hover {
-background: linear-gradient(to right, #7d2828, #552020);
-}
-#support-banner span {
-display: inline-flex;
-align-items: center;
-gap: 8px;
+    background: linear-gradient(to right, #6b2121, #4a1515); color: #ff6b6b;
+    padding: 16px 16px; text-align: center; font-size: 14px; font-weight: 600;
+    cursor: pointer; border-top: 2px solid rgba(255, 107, 107, 0.3);
+    transition: all 0.2s ease; letter-spacing: 0.4px; flex-shrink: 0; z-index: 90;
 }
 
 @media (max-width: 600px) {
-#center-btn { width: 64px; height: 64px; }
-#center-btn svg { width: 26px; height: 26px; }
-#ad-gate-btn { width: 72px; height: 72px; }
-.live-label { font-size: 11px; }
-#support-banner { font-size: 13px; padding: 12px 14px; }
+    #center-btn { width: 64px; height: 64px; }
+    #center-btn svg { width: 26px; height: 26px; }
+    #ad-gate-btn { width: 72px; height: 72px; }
+    .live-label { font-size: 11px; }
+    #support-banner { font-size: 13px; padding: 12px 14px; }
 }
 </style>
 </head>
 <body>
+
 <div id="video-wrapper">
-<video
-    id="my-video_html5_api"
-    class="video-js"
-    playsinline
-    webkit-playsinline
-    x5-video-player-type="h5"
-    x5-video-player-fullscreen="true">
-</video>
+    <video id="my-video" playsinline webkit-playsinline></video>
 
-<div id="ad-gate">
-<div id="ad-gate-btn">
-<svg viewBox="0 0 24 24" fill="#000"><polygon points="6,4 20,12 6,20"/></svg>
-</div>
-</div>
+    <div id="ad-gate" onclick="handleAdGate(event)">
+        <div id="ad-gate-btn">
+            <svg viewBox="0 0 24 24" fill="#000"><polygon points="6,4 20,12 6,20"/></svg>
+        </div>
+    </div>
 
-<div id="buffer-spinner"></div>
+    <div id="buffer-spinner"></div>
 
-<div id="center-btn">
-<svg id="center-icon" viewBox="0 0 24 24" fill="#000"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
-</div>
+    <div id="center-btn" onclick="togglePlay(event)">
+        <svg id="center-icon" viewBox="0 0 24 24" fill="#000"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+    </div>
 
-<div id="controls">
-<div class="progress-row">
-<div id="progress-track"><div id="progress-fill"></div></div>
-<div id="live-dot"></div>
-</div>
-<div class="controls-row">
-<div class="controls-left">
-<button class="icon-btn" id="play-btn" onclick="togglePlay(event)">
-<svg viewBox="0 0 24 24" fill="#fff"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
-</button>
-<button class="icon-btn" id="mute-btn" onclick="toggleMute(event)">
-<svg id="mute-icon" viewBox="0 0 24 24" fill="#fff"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M19 6a8 8 0 0 1 0 12" stroke="#fff" stroke-width="1.6" fill="none"/></svg>
-</button>
-</div>
-<div class="controls-right">
-<div class="live-label"><span class="dot"></span>LIVE</div>
-<button class="icon-btn" onclick="goFullscreen(event)">
-<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-</button>
-</div>
-</div>
-</div>
-
+    <div id="controls">
+        <div class="progress-row">
+            <div id="progress-track"><div id="progress-fill"></div></div>
+            <div id="live-dot"></div>
+        </div>
+        <div class="controls-row">
+            <div class="controls-left">
+                <button class="icon-btn" id="play-btn" onclick="togglePlay(event)">
+                    <svg viewBox="0 0 24 24" fill="#fff"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+                </button>
+                <button class="icon-btn" id="mute-btn" onclick="toggleMute(event)">
+                    <svg id="mute-icon" viewBox="0 0 24 24" fill="#fff"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M19 6a8 8 0 0 1 0 12" stroke="#fff" stroke-width="1.6" fill="none"/></svg>
+                </button>
+            </div>
+            <div class="controls-right">
+                <div class="live-label"><span class="dot"></span>LIVE</div>
+                <button class="icon-btn" onclick="goFullscreen(event)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="support-banner" onclick="openSupportLink(event)">
   <span>❤️ Support Us — Just Click</span>
 </div>
 
-<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.0/dist/hls.min.js"></script>
 <script>
-// ===== Player setup with Referer Header Bypass + buffer tuning =====
-const player = videojs('my-video_html5_api', {
-controls: false,
-autoplay: false,
-liveui: false,
-html5: {
-vhs: {
-GOAL_BUFFER_LENGTH: 30,
-MAX_GOAL_BUFFER_LENGTH: 60,
-BACK_BUFFER_LENGTH: 30,
-bandwidth: 4194304,
-enableLowInitialPlaylist: true,
-useDevicePixelRatio: true
-},
-hls: {
-beforeRequest: function(options) {
-options.headers = {
-...options.headers,
-'Referer': 'https://iptv-eldbert.xyz/'
-};
-return options;
-}
-}
-}
-});
-
-// ===== Stream link =====
+const video = document.getElementById('my-video');
 const streamUrl = "https://iptv-eldbert.xyz/proxy?url=https%3A%2F%2Fa2vlca.fubo18.com%3A443%2Fdsports%2Fmono.m3u8%3Ftoken%3D3dfd8c4f4a103e72bd9e71b1a5a58cbb379164d1-63-1782238606-1782220606";
-
-// ===== Adsterra smart link =====
 const AD_SMARTLINK = "https://www.effectivecpmnetwork.com/iyj82vg6?key=6a0d8977ddd973a097989e53a0e27ce4";
 
-const adGate = document.getElementById('ad-gate');
-let streamLoaded = false;
+let hls;
 
-adGate.addEventListener('click', () => {
-window.open(AD_SMARTLINK, '_blank');
-adGate.style.display = 'none';
-
-if (!streamLoaded) {
-streamLoaded = true;
-player.src({ src: streamUrl, type: 'application/x-mpegURL' });
+function initStream() {
+    if (Hls.isSupported()) {
+        hls = new Hls({
+            xhrSetup: function (xhr, url) {
+                xhr.setRequestHeader('Referer', 'https://iptv-eldbert.xyz/');
+            }
+        });
+        hls.loadSource(streamUrl);
+        hls.attachMedia(video);
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // iOS Safari Native engine fallback
+        video.src = streamUrl;
+    }
 }
 
-player.muted(false);
-const p = player.play();
-if (p && p.catch) {
-p.catch(() => {
-player.muted(true);
-player.play();
-updateMuteIcon();
-});
+function handleAdGate(e) {
+    if (e) e.stopPropagation();
+    window.open(AD_SMARTLINK, '_blank');
+    document.getElementById('ad-gate').style.display = 'none';
+
+    initStream();
+    
+    video.muted = false;
+    video.play().catch(() => {
+        video.muted = true;
+        video.play();
+        updateMuteIcon();
+    });
+    updateMuteIcon();
+    showUI();
 }
-updateMuteIcon();
-showUI();
-});
 
 function openSupportLink(e) {
-if (e) e.stopPropagation();
-window.open(AD_SMARTLINK, '_blank');
+    if (e) e.stopPropagation();
+    window.open(AD_SMARTLINK, '_blank');
 }
 
 function toggleMute(e) {
-if (e) e.stopPropagation();
-player.muted(!player.muted());
-updateMuteIcon();
+    if (e) e.stopPropagation();
+    video.muted = !video.muted;
+    updateMuteIcon();
 }
 
 function updateMuteIcon() {
-const icon = document.getElementById('mute-icon');
-if (player.muted()) {
-icon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3z"/><line x1="16" y1="8" x2="22" y2="16" stroke="#fff" stroke-width="2"/><line x1="22" y1="8" x2="16" y2="16" stroke="#fff" stroke-width="2"/>';
-} else {
-icon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M19 6a8 8 0 0 1 0 12" stroke="#fff" stroke-width="1.6" fill="none"/>';
-}
+    const icon = document.getElementById('mute-icon');
+    if (video.muted) {
+        icon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3z"/><line x1="16" y1="8" x2="22" y2="16" stroke="#fff" stroke-width="2"/><line x1="22" y1="8" x2="16" y2="16" stroke="#fff" stroke-width="2"/>';
+    } else {
+        icon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 8.5a5 5 0 0 1 0 7" stroke="#fff" stroke-width="1.6" fill="none"/><path d="M19 6a8 8 0 0 1 0 12" stroke="#fff" stroke-width="1.6" fill="none"/>';
+    }
 }
 
-// ===== FIXED FULLSCREEN AND ROTATION FOR MOBILE =====
-async function goFullscreen(e) {
+// ===== YOUTUBE STYLE NATIVE DEVICE FULLSCREEN ENGINE =====
+function goFullscreen(e) {
     if (e) e.stopPropagation();
 
-    const wrapper = document.getElementById('video-wrapper');
-    const video = document.getElementById('my-video_html5_api');
-
-    // Check if Safari / iOS native webkit fullscreen is available first (Crucial for iPhones)
+    // Check for iOS / Safari native fullscreen method first
     if (video.webkitEnterFullscreen) {
-        try {
-            video.webkitEnterFullscreen();
-            return;
-        } catch(err) {
-            console.log("iOS Fullscreen error fallback:", err);
-        }
+        video.webkitEnterFullscreen();
+    } 
+    // Standard system fullscreen for Android / Desktop Chrome / Firefox
+    else if (video.requestFullscreen) {
+        video.requestFullscreen();
+    } else if (video.mozRequestFullScreen) {
+        video.mozRequestFullScreen();
+    } else if (video.msRequestFullscreen) {
+        video.msRequestFullscreen();
     }
 
-    // Standard API approach for Android and Desktops
-    try {
-        if (!document.fullscreenElement) {
-            if (wrapper.requestFullscreen) {
-                await wrapper.requestFullscreen();
-            } else if (video.requestFullscreen) {
-                await video.requestFullscreen();
-            }
-
-            // Force landscape rotation on supported engines (Android Chrome, etc.)
-            if (screen.orientation && screen.orientation.lock) {
-                try {
-                    await screen.orientation.lock('landscape');
-                } catch(orientationErr) {
-                    console.log("Orientation lock rejected:", orientationErr);
-                }
-            }
-        } else {
-            if (document.exitFullscreen) {
-                await document.exitFullscreen();
-            }
-        }
-    } catch(err) {
-        console.log('Fullscreen error:', err);
+    // Force smartphone orientation rotation if system allows it
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
     }
+}
+
+function togglePlay(e) {
+    if (e) e.stopPropagation();
+    if (video.paused) {
+        video.play();
+    } else {
+        video.pause();
+    }
+    showUI();
 }
 
 const centerBtn = document.getElementById('center-btn');
@@ -299,92 +247,41 @@ const bufferSpinner = document.getElementById('buffer-spinner');
 function setPauseIcon(svg) { svg.innerHTML = '<rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/>'; }
 function setPlayIcon(svg) { svg.innerHTML = '<polygon points="6,4 20,12 6,20"/>'; }
 
-const LIVE_DRIFT_THRESHOLD = 15;
-
-function maybeCatchUpToLive() {
-try {
-const seekable = player.seekable();
-if (seekable && seekable.length) {
-const liveEdge = seekable.end(seekable.length - 1);
-const current = player.currentTime();
-if (liveEdge - current > LIVE_DRIFT_THRESHOLD) {
-player.currentTime(liveEdge - 2);
-}
-}
-} catch (e) {}
-}
-
-function togglePlay(e) {
-if (e) e.stopPropagation();
-if (player.paused()) {
-maybeCatchUpToLive();
-player.play();
-} else {
-player.pause();
-}
-showUI();
-}
-centerBtn.addEventListener('click', togglePlay);
-
-player.on('play', () => {
-setPauseIcon(centerIcon);
-setPauseIcon(playBtn.querySelector('svg'));
+video.addEventListener('play', () => {
+    setPauseIcon(centerIcon);
+    setPauseIcon(playBtn.querySelector('svg'));
 });
-player.on('pause', () => {
-setPlayIcon(centerIcon);
-setPlayIcon(playBtn.querySelector('svg'));
-showUI(true);
+video.addEventListener('pause', () => {
+    setPlayIcon(centerIcon);
+    setPlayIcon(playBtn.querySelector('svg'));
+    showUI(true);
 });
 
-player.on('waiting', () => bufferSpinner.classList.add('show'));
-player.on('playing', () => bufferSpinner.classList.remove('show'));
-player.on('canplay', () => bufferSpinner.classList.remove('show'));
+video.addEventListener('waiting', () => bufferSpinner.classList.add('show'));
+video.addEventListener('playing', () => bufferSpinner.classList.remove('show'));
+video.addEventListener('canplay', () => bufferSpinner.classList.remove('show'));
 
 let hideTimer = null;
 function showUI(persist) {
-centerBtn.classList.add('show');
-controls.classList.add('show');
-clearTimeout(hideTimer);
-if (!persist) {
-hideTimer = setTimeout(() => {
-if (!player.paused()) {
-centerBtn.classList.remove('show');
-controls.classList.remove('show');
-}
-}, 2000);
-}
-}
-
-let lastTapTime = 0;
-let singleTapTimer = null;
-
-function handleWrapperTap(e) {
-if (e.target.closest('#controls') || e.target.closest('#ad-gate') || e.target.closest('#support-banner')) return;
-
-const now = Date.now();
-const delta = now - lastTapTime;
-
-if (delta > 0 && delta < 350) {
-clearTimeout(singleTapTimer);
-lastTapTime = 0;
-goFullscreen();
-} else {
-lastTapTime = now;
-singleTapTimer = setTimeout(() => {
-togglePlay();
-}, 300);
-}
+    centerBtn.classList.add('show');
+    controls.classList.add('show');
+    clearTimeout(hideTimer);
+    if (!persist) {
+        hideTimer = setTimeout(() => {
+            if (!video.paused) {
+                centerBtn.classList.remove('show');
+                controls.classList.remove('show');
+            }
+        }, 2500);
+    }
 }
 
-wrapper.addEventListener('click', handleWrapperTap);
-wrapper.addEventListener('mousemove', () => showUI());
-wrapper.addEventListener('touchstart', () => showUI());
-wrapper.addEventListener('mouseleave', () => {
-if (!player.paused()) {
-centerBtn.classList.remove('show');
-controls.classList.remove('show');
-}
+wrapper.addEventListener('click', (e) => {
+    if (e.target.closest('#controls') || e.target.closest('#ad-gate') || e.target.closest('#support-banner')) return;
+    togglePlay(e);
 });
+wrapper.addEventListener('touchstart', () => showUI());
+wrapper.addEventListener('mousemove', () => showUI());
 </script>
 </body>
 </html>
