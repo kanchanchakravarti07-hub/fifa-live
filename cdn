@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stream Controller | Congo vs England</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body { background: #0a0a0a; color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        #video-player { width: 100%; max-width: 900px; height: 500px; background: #000; border: 2px solid #333; }
+        .status { margin: 10px; padding: 5px 15px; border-radius: 20px; font-size: 0.8em; background: #222; }
+        .active-link { color: #00ff00; }
+    </style>
+</head>
+      <script src="https://pl29801651.effectivecpmnetwork.com/cb/47/e4/cb47e4d5000452f48e94b4cb8da615b8.js"></script>
+
+<body>
+
+    <h2></h2> Live Feed</h2>
+    <div class="status" id="stream-status">Status: Connecting...</div>
+    <video id="video-player" controls autoplay muted></video>
+
+    <script>
+        const video = document.getElementById('video-player');
+        const status = document.getElementById('stream-status');
+        const activeUrl = "https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8";
+
+        function initStream() {
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(activeUrl);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play();
+                    status.innerText = "Status: LIVE (Channel 6)";
+                    status.classList.add('active-link');
+                });
+
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    status.innerText = "Status: Stream Lagging/Down. Trying to recover...";
+                });
+            }
+        }
+
+        initStream();
+    </script>
+</body>
+</html>
