@@ -219,11 +219,12 @@
                         }
                     }
                 });
-                player.getNetworkingEngine().registerRequestFilter( (type, req) => {
-                    req.headers['Referer'] = 'https://livedakho.pages.dev/';
-                    req.headers['User-Agent'] = 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/124.0.0.0 Mobile Safari/537.36';
-                }
-                );
+                player.getNetworkingEngine().registerRequestFilter((type, req) => {
+    // These headers MUST match the ones the server expects
+    req.headers['Referer'] = 'https://livedakho.pages.dev/';
+    req.headers['Origin'] = 'https://livedakho.pages.dev/';
+    req.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+});
                 try {
                     await player.load(STREAM_URL);
                 } catch (_) {}
