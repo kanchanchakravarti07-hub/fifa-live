@@ -18,19 +18,22 @@ jobs:
       - name: Fetch and Extract Data
         id: extract
         run: |
-          # Fetch the page source
-          PAGE_SOURCE=$(curl -s -L "https://sayanchannelcdn03.pages.dev/football/goltv")
+          # The site might be checking for headers, so let's include them
+          RESPONSE=$(curl -s -L -H "User-Agent: Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36" \
+          "https://sayanchannelcdn03.pages.dev/football/goltv")
           
-          # Extract STREAM_URL and RAW_KEYS using grep and sed
-          STREAM_URL=$(echo "$PAGE_SOURCE" | grep -oP 'const STREAM_URL = "\K[^"]+')
-          RAW_KEYS=$(echo "$PAGE_SOURCE" | grep -oP 'RAW_KEYS = "\K[^"]+')
+          # Use grep to find the lines containing the variables
+          STREAM_URL=$(echo "$RESPONSE" | grep -oP 'const STREAM_URL = "\K[^"]+')
+          RAW_KEYS=$(echo "$RESPONSE" | grep -oP 'RAW_KEYS = "\K[^"]+')
+          
+          # Check if we actually found something
+          if [ -z "$STREAM_URL" ] || [ -z "$RAW_KEYS" ]; then
+            echo "❌ Failed to extract data - pattern might have changed!"
+            exit 1
+          fi
           
           echo "STREAM_URL=$STREAM_URL" >> $GITHUB_OUTPUT
           echo "RAW_KEYS=$RAW_KEYS" >> $GITHUB_OUTPUT
-          
-          echo "Captured URL: $STREAM_URL"
-          echo "Captured Keys: $RAW_KEYS"
-
       - name: Update gtv.html
         run: |
           NEW_URL="${{ steps.extract.outputs.STREAM_URL }}"
