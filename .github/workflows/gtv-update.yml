@@ -1,0 +1,56 @@
+name: GTV URL & Keys Capture
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  update-gtv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Fetch and Extract Data
+        id: extract
+        run: |
+          # Fetch the page source
+          PAGE_SOURCE=$(curl -s -L "https://sayanchannelcdn03.pages.dev/football/goltv")
+          
+          # Extract STREAM_URL and RAW_KEYS using grep and sed
+          STREAM_URL=$(echo "$PAGE_SOURCE" | grep -oP 'const STREAM_URL = "\K[^"]+')
+          RAW_KEYS=$(echo "$PAGE_SOURCE" | grep -oP 'RAW_KEYS = "\K[^"]+')
+          
+          echo "STREAM_URL=$STREAM_URL" >> $GITHUB_OUTPUT
+          echo "RAW_KEYS=$RAW_KEYS" >> $GITHUB_OUTPUT
+          
+          echo "Captured URL: $STREAM_URL"
+          echo "Captured Keys: $RAW_KEYS"
+
+      - name: Update gtv.html
+        run: |
+          NEW_URL="${{ steps.extract.outputs.STREAM_URL }}"
+          NEW_KEYS="${{ steps.extract.outputs.RAW_KEYS }}"
+          
+          # Update the file using sed
+          if [ ! -z "$NEW_URL" ] && [ ! -z "$NEW_KEYS" ]; then
+            sed -i "s|const STREAM_URL = \".*\"|const STREAM_URL = \"$NEW_URL\"|g" gtv.html
+            sed -i "s|RAW_KEYS = \".*\"|RAW_KEYS = \"$NEW_KEYS\"|g" gtv.html
+            echo "URL_UPDATED=true" >> $GITHUB_ENV
+          else
+            echo "❌ Failed to capture data"
+            exit 1
+          fi
+
+      - name: Commit and push
+        if: env.URL_UPDATED == 'true'
+        run: |
+          git config --local user.email "axiom-bot@github.com"
+          git config --local user.name "Axiom API Automator"
+          git add gtv.html
+          git commit -m "🔄 GTV Updated via Source Scrape [$(date +'%Y-%m-%d %H:%M:%S')]"
+          git push origin main
