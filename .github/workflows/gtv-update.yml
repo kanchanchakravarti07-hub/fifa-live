@@ -21,27 +21,28 @@ jobs:
           node << 'EOF'
           const https = require('https');
           const fs = require('fs');
-          
+
+          // We fetch the main page (the Doc)
           const options = {
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36'
-            }
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36' }
           };
 
           https.get('https://sayanchannelcdn03.pages.dev/football/goltv', options, (res) => {
             let data = '';
             res.on('data', (chunk) => data += chunk);
             res.on('end', () => {
-              const urlMatch = data.match(/const STREAM_URL = "([^"]+)"/);
-              const keyMatch = data.match(/RAW_KEYS = "([^"]+)"/);
-              
+              // Extracting using the exact patterns from your screenshot
+              const urlMatch = data.match(/const STREAM_URL\s*=\s*['"]([^'"]+)['"]/);
+              const keyMatch = data.match(/RAW_KEYS\s*=\s*['"]([^'"]+)['"]/);
+
               if (urlMatch && keyMatch) {
                 console.log(`STREAM_URL=${urlMatch[1]}`);
                 console.log(`RAW_KEYS=${keyMatch[1]}`);
+                
                 fs.appendFileSync(process.env.GITHUB_OUTPUT, `STREAM_URL=${urlMatch[1]}\n`);
                 fs.appendFileSync(process.env.GITHUB_OUTPUT, `RAW_KEYS=${keyMatch[1]}\n`);
               } else {
-                console.error('❌ Could not find variables in page source');
+                console.error('❌ Could not find variables in the Doc response!');
                 process.exit(1);
               }
             });
