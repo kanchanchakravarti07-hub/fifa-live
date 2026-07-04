@@ -72,5 +72,10 @@ jobs:
           git config --local user.email "axiom-bot@github.com"
           git config --local user.name "Axiom API Automator"
           git add gtv.html
-          git commit -m "🔄 GTV Updated via Source Scrape [$(date +'%Y-%m-%d %H:%M:%S')]"
-          git push origin main
+          # Check if there are changes to commit
+          if ! git diff --cached --quiet; then
+            git commit -m "🔄 GTV Updated via Source Scrape [$(date +'%Y-%m-%d %H:%M:%S')]"
+            git push origin main
+          else
+            echo "No changes to commit."
+          fi
