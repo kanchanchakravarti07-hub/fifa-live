@@ -221,7 +221,8 @@
                 });
                 player.getNetworkingEngine().registerRequestFilter((type, req) => {
     req.headers['Referer'] = 'https://livedakho.pages.dev/';
-    req.headers['Origin'] = 'https://livedakho.pages.dev/';
+req.headers['Origin'] = 'https://livedakho.pages.dev/';
+req.headers['User-Agent'] = 'Mozilla/5.0...';
     // REMOVE the User-Agent line entirely to allow natural browser headers
 });
                 try {
