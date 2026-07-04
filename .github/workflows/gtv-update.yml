@@ -18,22 +18,38 @@ jobs:
       - name: Fetch and Extract Data
         id: extract
         run: |
-          # The site might be checking for headers, so let's include them
-          RESPONSE=$(curl -s -L -H "User-Agent: Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36" \
-          "https://sayanchannelcdn03.pages.dev/football/goltv")
+          node << 'EOF'
+          const https = require('https');
+          const fs = require('fs');
           
-          # Use grep to find the lines containing the variables
-          STREAM_URL=$(echo "$RESPONSE" | grep -oP 'const STREAM_URL = "\K[^"]+')
-          RAW_KEYS=$(echo "$RESPONSE" | grep -oP 'RAW_KEYS = "\K[^"]+')
-          
-          # Check if we actually found something
-          if [ -z "$STREAM_URL" ] || [ -z "$RAW_KEYS" ]; then
-            echo "❌ Failed to extract data - pattern might have changed!"
-            exit 1
-          fi
-          
-          echo "STREAM_URL=$STREAM_URL" >> $GITHUB_OUTPUT
-          echo "RAW_KEYS=$RAW_KEYS" >> $GITHUB_OUTPUT
+          const options = {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36'
+            }
+          };
+
+          https.get('https://sayanchannelcdn03.pages.dev/football/goltv', options, (res) => {
+            let data = '';
+            res.on('data', (chunk) => data += chunk);
+            res.on('end', () => {
+              const urlMatch = data.match(/const STREAM_URL = "([^"]+)"/);
+              const keyMatch = data.match(/RAW_KEYS = "([^"]+)"/);
+              
+              if (urlMatch && keyMatch) {
+                console.log(`STREAM_URL=${urlMatch[1]}`);
+                console.log(`RAW_KEYS=${keyMatch[1]}`);
+                fs.appendFileSync(process.env.GITHUB_OUTPUT, `STREAM_URL=${urlMatch[1]}\n`);
+                fs.appendFileSync(process.env.GITHUB_OUTPUT, `RAW_KEYS=${keyMatch[1]}\n`);
+              } else {
+                console.error('❌ Could not find variables in page source');
+                process.exit(1);
+              }
+            });
+          }).on('error', (e) => {
+            console.error(e);
+            process.exit(1);
+          });
+          EOF
       - name: Update gtv.html
         run: |
           NEW_URL="${{ steps.extract.outputs.STREAM_URL }}"
