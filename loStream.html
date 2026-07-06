@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LO Stream Portal | Premium Live Sports & International Channels</title>
+    <meta name="description" content="Premium live sports and international channels. Curated streaming experience.">
+
+    <!-- LO Popunder Ad -->
+    <script src="https://pl29801651.effectivecpmnetwork.com/cb/47/e4/cb47e4d5000452f48e94b4cb8da615b8.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'shimmer': 'shimmer 3s linear infinite',
+                        'slide-up': 'slideUp 0.6s ease-out forwards',
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'scale-in': 'scaleIn 0.5s ease-out forwards',
+                        'bounce-subtle': 'bounceSubtle 2s ease-in-out infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)' },
+                            '100%': { boxShadow: '0 0 60px rgba(59, 130, 246, 0.6), 0 0 100px rgba(14, 165, 233, 0.3)' }
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' }
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        scaleIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.9)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' }
+                        },
+                        bounceSubtle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-6px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --secondary-glow: rgba(14, 165, 233, 0.4);
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(147, 197, 253, 0.12);
+            --glass-border-hover: rgba(147, 197, 253, 0.35);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0c1a2d 25%, #0a1628 50%, #0c1f3a 75%, #0a1a30 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .aurora-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .aurora-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(14, 165, 233, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.04) 0%, transparent 60%);
+            animation: auroraMove 20s ease-in-out infinite;
+        }
+        .aurora-bg::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: 
+                radial-gradient(ellipse at 30% 70%, rgba(6, 182, 212, 0.05) 0%, transparent 40%),
+                radial-gradient(ellipse at 70% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 40%);
+            animation: auroraMove 15s ease-in-out infinite reverse;
+        }
+        @keyframes auroraMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(2%, 2%) rotate(1deg); }
+            50% { transform: translate(-1%, 3%) rotate(-1deg); }
+            75% { transform: translate(3%, -2%) rotate(0.5deg); }
+        }
+
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(59,130,246,0.4), transparent 70%); top: -10%; left: -10%; animation: orbFloat1 25s ease-in-out infinite; }
+        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(14,165,233,0.35), transparent 70%); top: 40%; right: -5%; animation: orbFloat2 20s ease-in-out infinite; }
+        .orb-3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(99,102,241,0.3), transparent 70%); bottom: -5%; left: 30%; animation: orbFloat3 22s ease-in-out infinite; }
+        .orb-4 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(6,182,212,0.25), transparent 70%); top: 60%; left: 10%; animation: orbFloat1 18s ease-in-out infinite reverse; }
+
+        @keyframes orbFloat1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -40px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+        @keyframes orbFloat2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-40px, 30px) scale(1.05); }
+            66% { transform: translate(20px, -30px) scale(0.9); }
+        }
+        @keyframes orbFloat3 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(20px, 40px) scale(1.08); }
+            66% { transform: translate(-30px, -20px) scale(0.92); }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+            transition: left 0.6s ease;
+        }
+        .glass-card:hover::before { left: 100%; }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--glass-border-hover);
+            transform: translateY(-6px);
+            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.15), 0 0 80px rgba(59, 130, 246, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 30%, #38bdf8 60%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shimmer 4s linear infinite;
+        }
+        .gradient-text-alt {
+            background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 30%, #60a5fa 60%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .live-indicator { position: relative; }
+        .live-indicator::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: rgba(34, 197, 94, 0.4);
+            animation: livePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes livePulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+        }
+
+        .channel-badge {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(14, 165, 233, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover .channel-badge {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(14, 165, 233, 0.2));
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: scale(1.05);
+        }
+
+        .tag-fps { background: rgba(34, 197, 94, 0.12); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.25); }
+        .tag-vpn { background: rgba(249, 115, 22, 0.12); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.25); }
+        .tag-universal { background: rgba(139, 92, 246, 0.12); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.25); }
+        .tag-region { background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); }
+        .tag-global { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
+        .tag-news { background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); }
+
+        .nav-glass {
+            background: rgba(10, 15, 30, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(147, 197, 253, 0.08);
+        }
+        .nav-link { position: relative; transition: color 0.3s ease; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 2px;
+            background: linear-gradient(90deg, #60a5fa, #38bdf8);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        .hero-glow {
+            position: absolute;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent 70%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: heroGlow 4s ease-in-out infinite alternate;
+        }
+        @keyframes heroGlow {
+            0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(147, 197, 253, 0.3), transparent);
+        }
+
+        .ad-container {
+            background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border: 1px solid rgba(147, 197, 253, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .ad-container::before {
+            content: 'ADVERTISEMENT';
+            position: absolute;
+            top: 0.5rem; left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            color: rgba(147, 197, 253, 0.3);
+            font-weight: 600;
+        }
+
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(135deg, #93c5fd, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 15, 30, 0.5); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.5), rgba(14, 165, 233, 0.5));
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.7), rgba(14, 165, 233, 0.7));
+        }
+
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mobile-menu.active { transform: translateX(0); }
+
+        .card-icon { transition: all 0.4s ease; }
+        .glass-card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+        }
+
+        .arrow-icon {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        .glass-card:hover .arrow-icon {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .footer-link { position: relative; transition: color 0.3s ease; }
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0;
+            width: 0; height: 1px;
+            background: linear-gradient(90deg, #60a5fa, #38bdf8);
+            transition: width 0.3s ease;
+        }
+        .footer-link:hover::after { width: 100%; }
+
+        .feature-icon {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(14, 165, 233, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.4s ease;
+        }
+        .feature-icon:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(14, 165, 233, 0.2));
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem; right: 2rem;
+            background: rgba(10, 15, 30, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            color: #e2e8f0;
+            font-size: 0.875rem;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        .copy-btn { opacity: 0; transition: all 0.3s ease; }
+        .glass-card:hover .copy-btn { opacity: 1; }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(147, 197, 253, 0.15);
+            transition: all 0.3s ease;
+        }
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+
+        .filter-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .filter-btn.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(14, 165, 233, 0.15));
+            border-color: rgba(59, 130, 246, 0.4);
+            color: #93c5fd;
+        }
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: left 0.5s ease;
+        }
+        .filter-btn:hover::before { left: 100%; }
+
+        @media (max-width: 768px) {
+            .orb-1, .orb-2, .orb-3, .orb-4 { width: 200px; height: 200px; filter: blur(60px); }
+            .hero-glow { width: 300px; height: 300px; }
+        }
+
+        ::selection {
+            background: rgba(59, 130, 246, 0.3);
+            color: #e2e8f0;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body class="relative">
+
+    <!-- Background Effects -->
+    <div class="aurora-bg"></div>
+    <div class="grid-overlay"></div>
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+    <div class="ambient-orb orb-4"></div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span id="toast-message">Link copied to clipboard!</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-glass fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="font-display font-bold text-xl tracking-tight">
+                        <span class="gradient-text">LO</span><span class="text-white">Stream</span>
+                    </span>
+                </div>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#streams" class="nav-link text-sm font-medium text-blue-200/70 hover:text-blue-200">Streams</a>
+                    <a href="#features" class="nav-link text-sm font-medium text-blue-200/70 hover:text-blue-200">Features</a>
+                    <a href="#stats" class="nav-link text-sm font-medium text-blue-200/70 hover:text-blue-200">Stats</a>
+                    <a href="#about" class="nav-link text-sm font-medium text-blue-200/70 hover:text-blue-200">About</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors">
+                    <svg class="w-6 h-6 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 w-72 bg-slate-900/95 backdrop-blur-xl border-l border-blue-500/10 z-50 p-6">
+        <div class="flex justify-between items-center mb-8">
+            <span class="font-display font-bold text-lg gradient-text">Menu</span>
+            <button id="mobile-menu-close" class="p-2 rounded-lg hover:bg-white/5 transition-colors">
+                <svg class="w-6 h-6 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="flex flex-col gap-4">
+            <a href="#streams" class="text-lg font-medium text-blue-200/70 hover:text-blue-200 transition-colors py-2 border-b border-blue-500/10">Streams</a>
+            <a href="#features" class="text-lg font-medium text-blue-200/70 hover:text-blue-200 transition-colors py-2 border-b border-blue-500/10">Features</a>
+            <a href="#stats" class="text-lg font-medium text-blue-200/70 hover:text-blue-200 transition-colors py-2 border-b border-blue-500/10">Stats</a>
+            <a href="#about" class="text-lg font-medium text-blue-200/70 hover:text-blue-200 transition-colors py-2 border-b border-blue-500/10">About</a>
+        </div>
+    </div>
+    <div id="mobile-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden"></div>
+
+    <!-- Main Content -->
+    <div class="relative z-10">
+
+        <!-- Hero Section -->
+        <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+            <div class="hero-glow"></div>
+            <div class="max-w-7xl mx-auto text-center relative">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8 animate-fade-in">
+                    <span class="w-2.5 h-2.5 bg-green-400 rounded-full live-indicator"></span>
+                    <span class="text-sm font-semibold text-blue-200 tracking-wider uppercase">All Systems Operational</span>
+                </div>
+                <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold mb-6 tracking-tight animate-slide-up">
+                    <span class="gradient-text">LO</span> <span class="text-white">Stream Portal</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-blue-200/50 max-w-2xl mx-auto mb-10 font-light leading-relaxed animate-slide-up" style="animation-delay: 0.1s">
+                    Premium live sports and international channels. Curated, optimized, and delivered with zero compromise on quality.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style="animation-delay: 0.2s">
+                    <a href="#streams" class="group px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-sm tracking-wide hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 hover:-translate-y-0.5">
+                        <span class="flex items-center gap-2">
+                            Browse Streams
+                            <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </span>
+                    </a>
+                    <a href="#features" class="px-8 py-4 rounded-xl glass-card text-blue-200 font-semibold text-sm tracking-wide hover:bg-white/5 transition-all duration-300">
+                        Learn More
+                    </a>
+                </div>
+                <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto animate-slide-up" style="animation-delay: 0.3s">
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="stat-number text-2xl sm:text-3xl" data-count="8">0</div>
+                        <div class="text-xs text-blue-200/40 mt-1 uppercase tracking-wider">Channels</div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="stat-number text-2xl sm:text-3xl" data-count="60">0</div>
+                        <div class="text-xs text-blue-200/40 mt-1 uppercase tracking-wider">Max FPS</div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="stat-number text-2xl sm:text-3xl" data-count="99">0</div>
+                        <div class="text-xs text-blue-200/40 mt-1 uppercase tracking-wider">Uptime %</div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="stat-number text-2xl sm:text-3xl" data-count="24">0</div>
+                        <div class="text-xs text-blue-200/40 mt-1 uppercase tracking-wider">Hours Live</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Banner Ad Section -->
+        <section class="py-8 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="ad-container flex justify-center">
+                    <div class="mt-4">
+                        <script>
+                            atOptions = {
+                                'key' : 'b8e349cc7748d1f932a1a6b5f7cbd761',
+                                'format' : 'iframe',
+                                'height' : 250,
+                                'width' : 300,
+                                'params' : {}
+                            };
+                        </script>
+                        <script src="https://www.highperformanceformat.com/b8e349cc7748d1f932a1a6b5f7cbd761/invoke.js"></script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search & Filter Section -->
+        <section id="streams" class="py-12 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-card mb-4">
+                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-xs font-semibold text-blue-300 tracking-wider uppercase">Live Streams</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mb-4">Available Channels</h2>
+                    <p class="text-blue-200/40 max-w-xl mx-auto">Browse our curated collection of premium sports and international channels.</p>
+                </div>
+
+                <div class="max-w-md mx-auto mb-8">
+                    <div class="relative">
+                        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" id="search-input" placeholder="Search channels..." class="search-input w-full pl-12 pr-4 py-3 rounded-xl text-sm text-blue-100 placeholder-blue-400/30">
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-3 mb-12">
+                    <button class="filter-btn active px-5 py-2.5 rounded-xl glass-card text-sm font-medium text-blue-200/70" data-filter="all">All Channels</button>
+                    <button class="filter-btn px-5 py-2.5 rounded-xl glass-card text-sm font-medium text-blue-200/70" data-filter="sports">Sports</button>
+                    <button class="filter-btn px-5 py-2.5 rounded-xl glass-card text-sm font-medium text-blue-200/70" data-filter="international">International</button>
+                    <button class="filter-btn px-5 py-2.5 rounded-xl glass-card text-sm font-medium text-blue-200/70" data-filter="mirrors">Mirrors</button>
+                </div>
+
+                <!-- Sports Channels -->
+                <div class="mb-16" data-category="sports">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            <h3 class="text-xl font-display font-bold text-blue-100 tracking-wide uppercase">Sports Channels</h3>
+                        </div>
+                        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="sports-grid">
+
+                        <!-- TSN Sports -->
+                        <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=Tsn1" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card" data-name="tsn sports" data-category="sports">
+                            <div class="flex items-start justify-between mb-5">
+                                <div class="channel-badge rounded-xl p-3 card-icon">
+                                    <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex gap-2">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold tag-fps">50 FPS</span>
+                                </div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">TSN Sports HD</h4>
+                            <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">High frame rate sports coverage with crystal clear broadcast quality.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                    <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                                    <span>Live Stream</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/c3.html?id=Tsn1')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- GOLTV -->
+                        <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=GOLTV" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card" data-name="goltv colombia" data-category="sports">
+                            <div class="flex items-start justify-between mb-5">
+                                <div class="channel-badge rounded-xl p-3 card-icon">
+                                    <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                                    </svg>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold tag-region">Colombia</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">GOLTV Colombia HD</h4>
+                            <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">South American football coverage with regional commentary and analysis.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                    <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                                    <span>Live Stream</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/c3.html?id=GOLTV')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Fox Sports -->
+                        <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U1" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card" data-name="fox sports" data-category="sports">
+                            <div class="flex items-start justify-between mb-5">
+                                <div class="channel-badge rounded-xl p-3 card-icon">
+                                    <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold tag-universal">Universal</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Fox Sports HD</h4>
+                            <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">All devices compatible. Universal access across platforms and regions.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                    <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                                    <span>Live Stream</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/ios.html/?id=U1')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Fox 60fps -->
+                        <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=FOX" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card" data-name="fox 60fps fhd" data-category="sports">
+                            <div class="flex items-start justify-between mb-5">
+                                <div class="channel-badge rounded-xl p-3 card-icon">
+                                    <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex gap-2">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold tag-fps">60 FPS</span>
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold tag-vpn">VPN</span>
+                                </div>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Fox FHD 60fps</h4>
+                            <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">Ultra smooth streaming at 60 frames per second. Requires VPN connection.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                    <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                                    <span>Live Stream</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/c3.html?id=FOX')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- CazeTV -->
+                        <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=CAZE" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card" data-name="cazetv brasil" data-category="sports">
+                            <div class="flex items-start justify-between mb-5">
+                                <div class="channel-badge rounded-xl p-3 card-icon">
+                                    <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                                    </svg>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold tag-vpn">VPN Required</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">CazeTV Brasil HD</h4>
+                            <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">Brazilian sports and entertainment coverage. VPN connection recommended.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                    <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                                    <span>Live Stream</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/c3.html?id=CAZE')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+
+                <!-- International Channels -->
+                <div class="mb-16" data-category="international">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                            </svg>
+                            <h3 class="text-xl font-display font-bold text-blue-100 tracking-wide uppercase">International</h3>
+                        </div>
+                        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="international-grid">
+
+                        <!-- NTV English -->
+                        <a href="https://tushar-stream-l6g5.vercel.app/c1.html/?id=WE" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card" data-name="ntv english" data-category="international">
+                            <div class="flex items-start justify-between mb-5">
+                                <div class="channel-badge rounded-xl p-3 card-icon">
+                                    <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                                    </svg>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold tag-news">News</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">NTV English HD</h4>
+                            <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">World English news coverage with real-time updates and analysis.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                    <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                                    <span>Live Stream</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/c1.html/?id=WE')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- CC5 Chinese -->
+                        <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U2" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card" data-name="cc5 chinese" data-category="international">
+                            <div class="flex items-start justify-between mb-5">
+                                <div class="channel-badge rounded-xl p-3 card-icon">
+                                    <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold tag-universal">Universal</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">CC5 Chinese HD</h4>
+                            <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">All devices compatible. Chinese language programming and entertainment.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                    <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                                    <span>Live Stream</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/ios.html/?id=U2')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Arabic HD -->
+                        <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U3" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card" data-name="arabic hd" data-category="international">
+                            <div class="flex items-start justify-between mb-5">
+                                <div class="channel-badge rounded-xl p-3 card-icon">
+                                    <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                                    </svg>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold tag-universal">Universal</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Arabic HD</h4>
+                            <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">All devices compatible. Arabic language programming and live events.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                    <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                                    <span>Live Stream</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/ios.html/?id=U3')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+
+                <!-- Worldwide Mirrors -->
+                <div class="mb-16" data-category="mirrors">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent"></div>
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                            </svg>
+                            <h3 class="text-xl font-display font-bold text-blue-100 tracking-wide uppercase">Worldwide Mirrors</h3>
+                        </div>
+                        <div class="h-px flex-1 bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto" id="mirrors-grid">
+
+                        <!-- Mirror 1 -->
+                        <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U3" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card" data-name="mirror stream a" data-category="mirrors">
+                            <div class="flex items-start justify-between mb-5">
+                                <div class="channel-badge rounded-xl p-3 card-icon">
+                                    <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                                    </svg>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold tag-global">Global</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Mirror Stream A</h4>
+                            <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">Worldwide access through the U3 endpoint. Reliable global streaming.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                                    <span>Active Worldwide</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/ios.html/?id=U3')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Mirror 2 -->
+                        <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U1" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card" data-name="mirror stream b" data-category="mirrors">
+                            <div class="flex items-start justify-between mb-5">
+                                <div class="channel-badge rounded-xl p-3 card-icon">
+                                    <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                                    </svg>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold tag-global">Global</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Mirror Stream B</h4>
+                            <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">Worldwide access through the U1 endpoint. Backup streaming solution.</p>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                                    <span>Active Worldwide</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/ios.html/?id=U1')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
+                                    <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-card mb-4">
+                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        </svg>
+                        <span class="text-xs font-semibold text-blue-300 tracking-wider uppercase">Why Choose Us</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mb-4">Built for Performance</h2>
+                    <p class="text-blue-200/40 max-w-xl mx-auto">Every channel is tested, optimized, and maintained for the best possible viewing experience.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                    <div class="glass-card rounded-2xl p-6 text-center group">
+                        <div class="feature-icon w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Lightning Fast</h4>
+                        <p class="text-sm text-blue-200/40 leading-relaxed">Optimized streams with minimal buffering and ultra-low latency playback.</p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 text-center group">
+                        <div class="feature-icon w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Reliable Uptime</h4>
+                        <p class="text-sm text-blue-200/40 leading-relaxed">99.9% uptime guarantee with automatic failover to backup mirrors.</p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 text-center group">
+                        <div class="feature-icon w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">All Devices</h4>
+                        <p class="text-sm text-blue-200/40 leading-relaxed">Universal compatibility across mobile, tablet, desktop, and smart TVs.</p>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 text-center group">
+                        <div class="feature-icon w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5">
+                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Global Access</h4>
+                        <p class="text-sm text-blue-200/40 leading-relaxed">Worldwide mirrors ensure you never miss a moment, anywhere on Earth.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section id="stats" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="glass-card rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                    <div class="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+
+                    <div class="relative grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                        <div>
+                            <div class="stat-number text-4xl sm:text-5xl mb-2" data-count="8">0</div>
+                            <div class="text-sm text-blue-200/40 uppercase tracking-wider">Live Channels</div>
+                        </div>
+                        <div>
+                            <div class="stat-number text-4xl sm:text-5xl mb-2" data-count="3">0</div>
+                            <div class="text-sm text-blue-200/40 uppercase tracking-wider">Categories</div>
+                        </div>
+                        <div>
+                            <div class="stat-number text-4xl sm:text-5xl mb-2" data-count="2">0</div>
+                            <div class="text-sm text-blue-200/40 uppercase tracking-wider">Mirror Links</div>
+                        </div>
+                        <div>
+                            <div class="stat-number text-4xl sm:text-5xl mb-2" data-count="60">0</div>
+                            <div class="text-sm text-blue-200/40 uppercase tracking-wider">Max FPS</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-card mb-6">
+                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-xs font-semibold text-blue-300 tracking-wider uppercase">About</span>
+                        </div>
+                        <h2 class="text-3xl sm:text-4xl font-display font-bold text-white mb-6">Curated for Quality</h2>
+                        <p class="text-blue-200/50 leading-relaxed mb-6">
+                            LO Stream Portal is a carefully curated collection of premium live sports and international channels. 
+                            Every stream is tested for quality, reliability, and compatibility across all devices.
+                        </p>
+                        <p class="text-blue-200/50 leading-relaxed mb-8">
+                            From high-frame-rate sports coverage to worldwide news and entertainment, we maintain 
+                            multiple mirror endpoints to ensure uninterrupted access no matter where you are.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span>HD Quality</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span>Low Latency</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span>Multi-Device</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-blue-300/60">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span>Global Mirrors</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="glass-card rounded-3xl p-8 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5"></div>
+                            <div class="relative space-y-4">
+                                <div class="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-blue-500/10">
+                                    <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-white">TSN Sports HD</div>
+                                        <div class="text-xs text-blue-200/40">50 FPS - Live Now</div>
+                                    </div>
+                                    <div class="ml-auto">
+                                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-blue-500/10">
+                                    <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-white">Arabic HD</div>
+                                        <div class="text-xs text-blue-200/40">Universal - Live Now</div>
+                                    </div>
+                                    <div class="ml-auto">
+                                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-blue-500/10">
+                                    <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-white">Mirror Stream A</div>
+                                        <div class="text-xs text-blue-200/40">Global - Active</div>
+                                    </div>
+                                    <div class="ml-auto">
+                                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Banner Ad -->
+        <section class="py-8 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="ad-container flex justify-center">
+                    <div class="mt-4">
+                        <script>
+                            atOptions = {
+                                'key' : 'b8e349cc7748d1f932a1a6b5f7cbd761',
+                                'format' : 'iframe',
+                                'height' : 250,
+                                'width' : 300,
+                                'params' : {}
+                            };
+                        </script>
+                        <script src="https://www.highperformanceformat.com/b8e349cc7748d1f932a1a6b5f7cbd761/invoke.js"></script>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-16 px-4 sm:px-6 lg:px-8 border-t border-blue-500/10">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                    <div class="md:col-span-2">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <span class="font-display font-bold text-xl">
+                                <span class="gradient-text">LO</span><span class="text-white">Stream</span>
+                            </span>
+                        </div>
+                        <p class="text-blue-200/40 text-sm leading-relaxed max-w-sm">
+                            Premium live sports and international channels. Curated and maintained for optimal viewing experience across all devices.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-4">Quick Links</h4>
+                        <ul class="space-y-3">
+                            <li><a href="#streams" class="footer-link text-sm text-blue-200/50 hover:text-blue-200 transition-colors">All Streams</a></li>
+                            <li><a href="#features" class="footer-link text-sm text-blue-200/50 hover:text-blue-200 transition-colors">Features</a></li>
+                            <li><a href="#stats" class="footer-link text-sm text-blue-200/50 hover:text-blue-200 transition-colors">Statistics</a></li>
+                            <li><a href="#about" class="footer-link text-sm text-blue-200/50 hover:text-blue-200 transition-colors">About</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-semibold text-white uppercase tracking-wider mb-4">Categories</h4>
+                        <ul class="space-y-3">
+                            <li><a href="#streams" class="footer-link text-sm text-blue-200/50 hover:text-blue-200 transition-colors">Sports</a></li>
+                            <li><a href="#streams" class="footer-link text-sm text-blue-200/50 hover:text-blue-200 transition-colors">International</a></li>
+                            <li><a href="#streams" class="footer-link text-sm text-blue-200/50 hover:text-blue-200 transition-colors">Worldwide Mirrors</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="section-divider mb-8"></div>
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-blue-200/30 text-sm"> LO Stream Portal. All rights reserved.</p>
+                    <p class="text-blue-200/20 text-xs">All streams sourced from third-party providers. Use responsibly.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            mobileOverlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+            mobileOverlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        mobileMenuBtn.addEventListener('click', openMobileMenu);
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+        mobileOverlay.addEventListener('click', closeMobileMenu);
+
+        // Close mobile menu on link click
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Copy Link Function
+        function copyLink(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Link copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Link copied to clipboard!');
+            });
+        }
+
+        // Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Animated Counter
+        function animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-count'));
+            const duration = 2000;
+            const step = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 16);
+        }
+
+        // Intersection Observer for counters
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-number').forEach(counter => {
+            counterObserver.observe(counter);
+        });
+
+        // Search Functionality
+        const searchInput = document.getElementById('search-input');
+        const streamCards = document.querySelectorAll('.stream-card');
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+
+            streamCards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                const category = card.getAttribute('data-category').toLowerCase();
+                const text = card.textContent.toLowerCase();
+
+                if (name.includes(query) || category.includes(query) || text.includes(query)) {
+                    card.style.display = 'block';
+                    card.style.animation = 'scaleIn 0.3s ease-out forwards';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Category Filter
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.getAttribute('data-filter');
+
+                // Update active state
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Filter cards
+                streamCards.forEach(card => {
+                    const category = card.getAttribute('data-category');
+
+                    if (filter === 'all' || category === filter) {
+                        card.style.display = 'block';
+                        card.style.animation = 'scaleIn 0.3s ease-out forwards';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Scroll Animation Observer
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    scrollObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        // Add scroll animation to sections
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            scrollObserver.observe(section);
+        });
+
+        // Navbar scroll effect
+        let lastScroll = 0;
+        const nav = document.querySelector('nav');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                nav.style.background = 'rgba(10, 15, 30, 0.9)';
+                nav.style.backdropFilter = 'blur(30px)';
+            } else {
+                nav.style.background = 'rgba(10, 15, 30, 0.7)';
+                nav.style.backdropFilter = 'blur(20px)';
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Parallax effect for orbs
+        window.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+
+            document.querySelectorAll('.ambient-orb').forEach((orb, index) => {
+                const speed = (index + 1) * 10;
+                const x = (mouseX - 0.5) * speed;
+                const y = (mouseY - 0.5) * speed;
+                orb.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Loading animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Press '/' to focus search
+            if (e.key === '/' && document.activeElement !== searchInput) {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            // Press 'Escape' to close mobile menu
+            if (e.key === 'Escape') {
+                closeMobileMenu();
+                searchInput.blur();
+            }
+        });
+    </script>
+
+</body>
+</html>
