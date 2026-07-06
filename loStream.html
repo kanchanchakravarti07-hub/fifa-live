@@ -3,34 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LO Stream Portal | Premium Live Sports & International Channels</title>
-    <meta name="description" content="Premium live sports and international channels. Curated streaming experience with HD quality and worldwide access.">
-
-    <!-- LO Popunder Ad -->
-    <script src="https://pl29801651.effectivecpmnetwork.com/cb/47/e4/cb47e4d5000452f48e94b4cb8da615b8.js"></script>
-
+    <title>LO Stream Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Popunder Ad -->
+    <script src="https://pl29801651.effectivecpmnetwork.com/cb/47/e4/cb47e4d5000452f48e94b4cb8da615b8.js"></script>
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                        display: ['Space Grotesk', 'sans-serif'],
                     },
                     animation: {
                         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'float': 'float 6s ease-in-out infinite',
                         'glow': 'glow 2s ease-in-out infinite alternate',
-                        'shimmer': 'shimmer 3s linear infinite',
-                        'slide-up': 'slideUp 0.6s ease-out forwards',
-                        'fade-in': 'fadeIn 0.8s ease-out forwards',
-                        'scale-in': 'scaleIn 0.5s ease-out forwards',
-                        'bounce-subtle': 'bounceSubtle 2s ease-in-out infinite',
                     },
                     keyframes: {
                         float: {
@@ -39,381 +31,101 @@
                         },
                         glow: {
                             '0%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)' },
-                            '100%': { boxShadow: '0 0 60px rgba(59, 130, 246, 0.6), 0 0 100px rgba(14, 165, 233, 0.3)' }
-                        },
-                        shimmer: {
-                            '0%': { backgroundPosition: '-200% 0' },
-                            '100%': { backgroundPosition: '200% 0' }
-                        },
-                        slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(30px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' }
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' }
-                        },
-                        scaleIn: {
-                            '0%': { opacity: '0', transform: 'scale(0.9)' },
-                            '100%': { opacity: '1', transform: 'scale(1)' }
-                        },
-                        bounceSubtle: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-6px)' }
+                            '100%': { boxShadow: '0 0 40px rgba(59, 130, 246, 0.6)' },
                         }
                     }
                 }
             }
         }
     </script>
-
     <style>
-        :root {
-            --primary-glow: rgba(59, 130, 246, 0.5);
-            --secondary-glow: rgba(14, 165, 233, 0.4);
-            --accent-glow: rgba(99, 102, 241, 0.3);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(147, 197, 253, 0.12);
-            --glass-border-hover: rgba(147, 197, 253, 0.35);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0a0f1e 0%, #0c1a2d 25%, #0a1628 50%, #0c1f3a 75%, #0a1a30 100%);
-            background-attachment: fixed;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0c4a6e 100%);
             min-height: 100vh;
-            color: #e2e8f0;
-            overflow-x: hidden;
-            line-height: 1.6;
         }
-
-        /* Aurora Background */
-        .aurora-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-        .aurora-bg::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(14, 165, 233, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.04) 0%, transparent 60%);
-            animation: auroraMove 20s ease-in-out infinite;
-        }
-        .aurora-bg::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: 
-                radial-gradient(ellipse at 30% 70%, rgba(6, 182, 212, 0.05) 0%, transparent 40%),
-                radial-gradient(ellipse at 70% 30%, rgba(59, 130, 246, 0.05) 0%, transparent 40%);
-            animation: auroraMove 15s ease-in-out infinite reverse;
-        }
-        @keyframes auroraMove {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(2%, 2%) rotate(1deg); }
-            50% { transform: translate(-1%, 3%) rotate(-1deg); }
-            75% { transform: translate(3%, -2%) rotate(0.5deg); }
-        }
-
-        /* Ambient Orbs */
-        .ambient-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.3;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(59,130,246,0.4), transparent 70%); top: -10%; left: -10%; animation: orbFloat1 25s ease-in-out infinite; }
-        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(14,165,233,0.35), transparent 70%); top: 40%; right: -5%; animation: orbFloat2 20s ease-in-out infinite; }
-        .orb-3 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(99,102,241,0.3), transparent 70%); bottom: -5%; left: 30%; animation: orbFloat3 22s ease-in-out infinite; }
-        .orb-4 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(6,182,212,0.25), transparent 70%); top: 60%; left: 10%; animation: orbFloat1 18s ease-in-out infinite reverse; }
-
-        @keyframes orbFloat1 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -40px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.95); }
-        }
-        @keyframes orbFloat2 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(-40px, 30px) scale(1.05); }
-            66% { transform: translate(20px, -30px) scale(0.9); }
-        }
-        @keyframes orbFloat3 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(20px, 40px) scale(1.08); }
-            66% { transform: translate(-30px, -20px) scale(0.92); }
-        }
-
-        /* Grid Overlay */
-        .grid-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Glass Card */
+        
         .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(147, 197, 253, 0.15);
+            transition: all 0.3s ease;
         }
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
-            transition: left 0.6s ease;
-        }
-        .glass-card:hover::before { left: 100%; }
+        
         .glass-card:hover {
             background: rgba(255, 255, 255, 0.06);
-            border-color: var(--glass-border-hover);
-            transform: translateY(-6px);
-            box-shadow: 0 25px 50px rgba(59, 130, 246, 0.15), 0 0 80px rgba(59, 130, 246, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-color: rgba(147, 197, 253, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2), 0 0 60px rgba(59, 130, 246, 0.1);
         }
-
-        /* Gradient Text */
-        .gradient-text {
-            background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 30%, #38bdf8 60%, #818cf8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            background-size: 200% auto;
-            animation: shimmer 4s linear infinite;
-        }
-
-        /* Live Indicator */
-        .live-indicator { position: relative; }
-        .live-indicator::after {
-            content: '';
+        
+        .ambient-orb {
             position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%; height: 100%;
             border-radius: 50%;
-            background: rgba(34, 197, 94, 0.4);
-            animation: livePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            filter: blur(80px);
+            opacity: 0.4;
+            pointer-events: none;
         }
-        @keyframes livePulse {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+        
+        .live-indicator {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
-
-        /* Channel Badge */
+        
         .channel-badge {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(14, 165, 233, 0.1));
-            border: 1px solid rgba(59, 130, 246, 0.25);
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(14, 165, 233, 0.2));
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
-        .glass-card:hover .channel-badge {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(14, 165, 233, 0.2));
-            border-color: rgba(59, 130, 246, 0.5);
-            transform: scale(1.05);
-        }
-
-        /* Tags */
-        .tag-fps { background: rgba(34, 197, 94, 0.12); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.25); }
-        .tag-vpn { background: rgba(249, 115, 22, 0.12); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.25); }
-        .tag-universal { background: rgba(139, 92, 246, 0.12); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.25); }
-        .tag-region { background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); }
-        .tag-global { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
-        .tag-news { background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); }
-
-        /* Section Divider */
-        .section-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(147, 197, 253, 0.3), transparent);
-        }
-
-        /* Ad Container */
-        .ad-container {
-            background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-            border: 1px solid rgba(147, 197, 253, 0.1);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-        .ad-container::before {
-            content: 'ADVERTISEMENT';
-            position: absolute;
-            top: 0.5rem; left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.6rem;
-            letter-spacing: 0.2em;
-            color: rgba(147, 197, 253, 0.3);
-            font-weight: 600;
-        }
-
-        /* Stat Number */
-        .stat-number {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            background: linear-gradient(135deg, #93c5fd, #60a5fa);
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #93c5fd, #60a5fa, #38bdf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(10, 15, 30, 0.5); }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, rgba(59, 130, 246, 0.5), rgba(14, 165, 233, 0.5));
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, rgba(59, 130, 246, 0.7), rgba(14, 165, 233, 0.7));
-        }
-
-        /* Card Icon Animation */
-        .card-icon { transition: all 0.4s ease; }
-        .glass-card:hover .card-icon {
-            transform: scale(1.1) rotate(5deg);
-            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
-        }
-
-        /* Arrow Animation */
-        .arrow-icon {
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateX(-10px);
-        }
-        .glass-card:hover .arrow-icon {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* Copy Button */
-        .copy-btn { opacity: 0; transition: all 0.3s ease; }
-        .glass-card:hover .copy-btn { opacity: 1; }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 2rem; right: 2rem;
-            background: rgba(10, 15, 30, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 1rem;
-            padding: 1rem 1.5rem;
-            color: #e2e8f0;
-            font-size: 0.875rem;
-            z-index: 1000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        }
-        .toast.show { transform: translateY(0); opacity: 1; }
-
-        /* Selection */
-        ::selection {
-            background: rgba(59, 130, 246, 0.3);
-            color: #e2e8f0;
-        }
-
-        @media (max-width: 768px) {
-            .orb-1, .orb-2, .orb-3, .orb-4 { width: 200px; height: 200px; filter: blur(60px); }
+        
+        .ad-banner-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(147, 197, 253, 0.1);
         }
     </style>
-<base target="_blank">
 </head>
-<body class="relative">
+<body class="text-slate-200 relative overflow-x-hidden">
 
-    <!-- Background Effects -->
-    <div class="aurora-bg"></div>
-    <div class="grid-overlay"></div>
-    <div class="ambient-orb orb-1"></div>
-    <div class="ambient-orb orb-2"></div>
-    <div class="ambient-orb orb-3"></div>
-    <div class="ambient-orb orb-4"></div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="toast">
-        <div class="flex items-center gap-3">
-            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <span id="toast-message">Link copied to clipboard!</span>
-        </div>
-    </div>
+    <!-- Ambient Background Orbs -->
+    <div class="ambient-orb w-96 h-96 bg-blue-500 top-0 left-0 -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="ambient-orb w-80 h-80 bg-cyan-400 top-1/3 right-0 translate-x-1/3"></div>
+    <div class="ambient-orb w-72 h-72 bg-blue-400 bottom-0 left-1/3 translate-y-1/3"></div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-
+        
         <!-- Header -->
         <header class="text-center mb-16">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6 animate-fade-in">
-                <span class="w-2.5 h-2.5 bg-green-400 rounded-full live-indicator"></span>
-                <span class="text-sm font-semibold text-blue-200 tracking-wider uppercase">All Streams Operational</span>
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6">
+                <span class="w-2 h-2 bg-green-400 rounded-full live-indicator"></span>
+                <span class="text-sm font-medium text-blue-200 tracking-wide">ALL STREAMS OPERATIONAL</span>
             </div>
-            <h1 class="text-5xl md:text-7xl font-display font-bold mb-4 tracking-tight animate-slide-up">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 tracking-tight">
                 <span class="gradient-text">LO</span> <span class="text-white">Stream Portal</span>
             </h1>
-            <p class="text-lg text-blue-200/50 max-w-2xl mx-auto font-light leading-relaxed animate-slide-up" style="animation-delay: 0.1s">
+            <p class="text-blue-200/60 text-lg max-w-2xl mx-auto font-light">
                 Premium live sports and international channels. Curated and maintained for optimal viewing experience.
             </p>
-
-            <!-- Quick Stats -->
-            <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto animate-slide-up" style="animation-delay: 0.2s">
-                <div class="glass-card rounded-2xl p-4">
-                    <div class="stat-number text-2xl" data-count="8">0</div>
-                    <div class="text-xs text-blue-200/40 mt-1 uppercase tracking-wider">Channels</div>
-                </div>
-                <div class="glass-card rounded-2xl p-4">
-                    <div class="stat-number text-2xl" data-count="60">0</div>
-                    <div class="text-xs text-blue-200/40 mt-1 uppercase tracking-wider">Max FPS</div>
-                </div>
-                <div class="glass-card rounded-2xl p-4">
-                    <div class="stat-number text-2xl" data-count="99">0</div>
-                    <div class="text-xs text-blue-200/40 mt-1 uppercase tracking-wider">Uptime %</div>
-                </div>
-                <div class="glass-card rounded-2xl p-4">
-                    <div class="stat-number text-2xl" data-count="24">0</div>
-                    <div class="text-xs text-blue-200/40 mt-1 uppercase tracking-wider">Hours Live</div>
-                </div>
-            </div>
         </header>
 
         <!-- Banner Ad Section -->
-        <div class="flex justify-center mb-12 animate-fade-in">
-            <div class="ad-container inline-block">
-                <div class="mt-4">
-                    <script>
-                        atOptions = {
-                            'key' : 'b8e349cc7748d1f932a1a6b5f7cbd761',
-                            'format' : 'iframe',
-                            'height' : 250,
-                            'width' : 300,
-                            'params' : {}
-                        };
-                    </script>
-                    <script src="https://www.highperformanceformat.com/b8e349cc7748d1f932a1a6b5f7cbd761/invoke.js"></script>
-                </div>
+        <div class="flex justify-center mb-12">
+            <div class="ad-banner-container rounded-2xl p-4 inline-block">
+                <script>
+                    atOptions = {
+                        'key' : 'b8e349cc7748d1f932a1a6b5f7cbd761',
+                        'format' : 'iframe',
+                        'height' : 250,
+                        'width' : 300,
+                        'params' : {}
+                    };
+                </script>
+                <script src="https://www.highperformanceformat.com/b8e349cc7748d1f932a1a6b5f7cbd761/invoke.js"></script>
             </div>
         </div>
 
@@ -421,170 +133,118 @@
         <section class="mb-16">
             <div class="flex items-center gap-4 mb-8">
                 <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
-                <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
-                    <h2 class="text-2xl font-display font-bold text-blue-100 tracking-wide uppercase">Sports Channels</h2>
-                </div>
+                <h2 class="text-2xl font-bold text-blue-100 tracking-wide uppercase">Sports Channels</h2>
                 <div class="h-px flex-1 bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></div>
             </div>
-
+            
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
+                
                 <!-- TSN Sports -->
-                <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=Tsn1" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="channel-badge rounded-xl p-3 card-icon">
-                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=Tsn1" target="_blank" class="glass-card rounded-2xl p-6 block group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="channel-badge rounded-xl p-3">
+                            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full text-xs font-bold tag-fps">50 FPS</span>
-                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-300 border border-green-500/30">50 FPS</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">TSN Sports HD</h3>
-                    <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">High frame rate sports coverage with crystal clear broadcast quality.</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-sm text-blue-300/60">
-                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                            <span>Live Stream</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/c3.html?id=Tsn1')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
-                                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                            </button>
-                            <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">TSN Sports HD</h3>
+                    <p class="text-sm text-blue-200/50 mb-4">High frame rate sports coverage</p>
+                    <div class="flex items-center gap-2 text-sm text-blue-300/70">
+                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                        <span>Click to stream</span>
+                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- GOLTV -->
-                <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=GOLTV" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="channel-badge rounded-xl p-3 card-icon">
-                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=GOLTV" target="_blank" class="glass-card rounded-2xl p-6 block group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="channel-badge rounded-xl p-3">
+                            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
                             </svg>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold tag-region">Colombia</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300 border border-blue-500/30">Colombia</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">GOLTV Colombia HD</h3>
-                    <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">South American football coverage with regional commentary and analysis.</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-sm text-blue-300/60">
-                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                            <span>Live Stream</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/c3.html?id=GOLTV')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
-                                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                            </button>
-                            <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">GOLTV Colombia HD</h3>
+                    <p class="text-sm text-blue-200/50 mb-4">South American football coverage</p>
+                    <div class="flex items-center gap-2 text-sm text-blue-300/70">
+                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                        <span>Click to stream</span>
+                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- Fox Sports -->
-                <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U1" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="channel-badge rounded-xl p-3 card-icon">
-                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U1" target="_blank" class="glass-card rounded-2xl p-6 block group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="channel-badge rounded-xl p-3">
+                            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold tag-universal">Universal</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">Universal</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Fox Sports HD</h3>
-                    <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">All devices compatible. Universal access across platforms and regions.</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-sm text-blue-300/60">
-                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                            <span>Live Stream</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/ios.html/?id=U1')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
-                                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                            </button>
-                            <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">Fox Sports HD</h3>
+                    <p class="text-sm text-blue-200/50 mb-4">All devices compatible</p>
+                    <div class="flex items-center gap-2 text-sm text-blue-300/70">
+                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                        <span>Click to stream</span>
+                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- Fox 60fps -->
-                <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=FOX" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="channel-badge rounded-xl p-3 card-icon">
-                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=FOX" target="_blank" class="glass-card rounded-2xl p-6 block group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="channel-badge rounded-xl p-3">
+                            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                             </svg>
                         </div>
                         <div class="flex gap-2">
-                            <span class="px-3 py-1 rounded-full text-xs font-bold tag-fps">60 FPS</span>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold tag-vpn">VPN</span>
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-300 border border-green-500/30">60 FPS</span>
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-orange-500/20 text-orange-300 border border-orange-500/30">VPN</span>
                         </div>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Fox FHD 60fps</h3>
-                    <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">Ultra smooth streaming at 60 frames per second. Requires VPN connection.</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-sm text-blue-300/60">
-                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                            <span>Live Stream</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/c3.html?id=FOX')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
-                                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                            </button>
-                            <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">Fox FHD 60fps</h3>
+                    <p class="text-sm text-blue-200/50 mb-4">Ultra smooth streaming</p>
+                    <div class="flex items-center gap-2 text-sm text-blue-300/70">
+                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                        <span>Click to stream</span>
+                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- CazeTV -->
-                <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=CAZE" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="channel-badge rounded-xl p-3 card-icon">
-                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                <a href="https://tushar-stream-l6g5.vercel.app/c3.html?id=CAZE" target="_blank" class="glass-card rounded-2xl p-6 block group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="channel-badge rounded-xl p-3">
+                            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
                             </svg>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold tag-vpn">VPN Required</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-orange-500/20 text-orange-300 border border-orange-500/30">VPN Required</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">CazeTV Brasil HD</h3>
-                    <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">Brazilian sports and entertainment coverage. VPN connection recommended.</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-sm text-blue-300/60">
-                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                            <span>Live Stream</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/c3.html?id=CAZE')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
-                                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                            </button>
-                            <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">CazeTV Brasil HD</h3>
+                    <p class="text-sm text-blue-200/50 mb-4">Brazilian sports and entertainment</p>
+                    <div class="flex items-center gap-2 text-sm text-blue-300/70">
+                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                        <span>Click to stream</span>
+                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
                     </div>
                 </a>
 
@@ -595,104 +255,72 @@
         <section class="mb-16">
             <div class="flex items-center gap-4 mb-8">
                 <div class="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
-                <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
-                    </svg>
-                    <h2 class="text-2xl font-display font-bold text-blue-100 tracking-wide uppercase">International</h2>
-                </div>
+                <h2 class="text-2xl font-bold text-blue-100 tracking-wide uppercase">International</h2>
                 <div class="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
             </div>
-
+            
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
+                
                 <!-- NTV English -->
-                <a href="https://tushar-stream-l6g5.vercel.app/c1.html/?id=WE" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="channel-badge rounded-xl p-3 card-icon">
-                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                <a href="https://tushar-stream-l6g5.vercel.app/c1.html/?id=WE" target="_blank" class="glass-card rounded-2xl p-6 block group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="channel-badge rounded-xl p-3">
+                            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
                             </svg>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold tag-news">News</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300 border border-blue-500/30">News</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">NTV English HD</h3>
-                    <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">World English news coverage with real-time updates and analysis.</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-sm text-blue-300/60">
-                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                            <span>Live Stream</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/c1.html/?id=WE')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
-                                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                            </button>
-                            <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">NTV English HD</h3>
+                    <p class="text-sm text-blue-200/50 mb-4">World English news coverage</p>
+                    <div class="flex items-center gap-2 text-sm text-blue-300/70">
+                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                        <span>Click to stream</span>
+                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- CC5 Chinese -->
-                <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U2" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="channel-badge rounded-xl p-3 card-icon">
-                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U2" target="_blank" class="glass-card rounded-2xl p-6 block group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="channel-badge rounded-xl p-3">
+                            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold tag-universal">Universal</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">Universal</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">CC5 Chinese HD</h3>
-                    <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">All devices compatible. Chinese language programming and entertainment.</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-sm text-blue-300/60">
-                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                            <span>Live Stream</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/ios.html/?id=U2')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
-                                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                            </button>
-                            <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">CC5 Chinese HD</h3>
+                    <p class="text-sm text-blue-200/50 mb-4">All devices compatible</p>
+                    <div class="flex items-center gap-2 text-sm text-blue-300/70">
+                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                        <span>Click to stream</span>
+                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- Arabic HD -->
-                <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U3" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="channel-badge rounded-xl p-3 card-icon">
-                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U3" target="_blank" class="glass-card rounded-2xl p-6 block group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="channel-badge rounded-xl p-3">
+                            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
                             </svg>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold tag-universal">Universal</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">Universal</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Arabic HD</h3>
-                    <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">All devices compatible. Arabic language programming and live events.</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-sm text-blue-300/60">
-                            <span class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-                            <span>Live Stream</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/ios.html/?id=U3')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
-                                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                            </button>
-                            <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">Arabic HD</h3>
+                    <p class="text-sm text-blue-200/50 mb-4">All devices compatible</p>
+                    <div class="flex items-center gap-2 text-sm text-blue-300/70">
+                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                        <span>Click to stream</span>
+                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
                     </div>
                 </a>
 
@@ -703,97 +331,56 @@
         <section class="mb-16">
             <div class="flex items-center gap-4 mb-8">
                 <div class="h-px flex-1 bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent"></div>
-                <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
-                    </svg>
-                    <h2 class="text-2xl font-display font-bold text-blue-100 tracking-wide uppercase">Worldwide Mirrors</h2>
-                </div>
+                <h2 class="text-2xl font-bold text-blue-100 tracking-wide uppercase">Worldwide Mirrors</h2>
                 <div class="h-px flex-1 bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent"></div>
             </div>
-
+            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-
+                
                 <!-- Mirror 1 -->
-                <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U3" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="channel-badge rounded-xl p-3 card-icon">
-                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U3" target="_blank" class="glass-card rounded-2xl p-6 block group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="channel-badge rounded-xl p-3">
+                            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
                             </svg>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold tag-global">Global</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Global</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Mirror Stream A</h3>
-                    <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">Worldwide access through the U3 endpoint. Reliable global streaming.</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-sm text-blue-300/60">
-                            <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                            <span>Active Worldwide</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/ios.html/?id=U3')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
-                                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                            </button>
-                            <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">Mirror Stream A</h3>
+                    <p class="text-sm text-blue-200/50 mb-4">Worldwide access — U3 Endpoint</p>
+                    <div class="flex items-center gap-2 text-sm text-blue-300/70">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                        <span>Active worldwide</span>
+                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- Mirror 2 -->
-                <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U1" target="_blank" class="glass-card rounded-2xl p-6 block group stream-card">
-                    <div class="flex items-start justify-between mb-5">
-                        <div class="channel-badge rounded-xl p-3 card-icon">
-                            <svg class="w-7 h-7 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
+                <a href="https://tushar-stream-l6g5.vercel.app/ios.html/?id=U1" target="_blank" class="glass-card rounded-2xl p-6 block group">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="channel-badge rounded-xl p-3">
+                            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path>
                             </svg>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold tag-global">Global</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Global</span>
                     </div>
-                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">Mirror Stream B</h3>
-                    <p class="text-sm text-blue-200/40 mb-5 leading-relaxed">Worldwide access through the U1 endpoint. Backup streaming solution.</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 text-sm text-blue-300/60">
-                            <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                            <span>Active Worldwide</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="event.preventDefault(); copyLink('https://tushar-stream-l6g5.vercel.app/ios.html/?id=U1')" class="copy-btn p-2 rounded-lg hover:bg-white/5 transition-colors" title="Copy Link">
-                                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                            </button>
-                            <svg class="w-5 h-5 text-blue-400 arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">Mirror Stream B</h3>
+                    <p class="text-sm text-blue-200/50 mb-4">Worldwide access — U1 Endpoint</p>
+                    <div class="flex items-center gap-2 text-sm text-blue-300/70">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                        <span>Active worldwide</span>
+                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
                     </div>
                 </a>
 
             </div>
         </section>
-
-        <!-- Bottom Banner Ad -->
-        <div class="flex justify-center mb-12">
-            <div class="ad-container inline-block">
-                <div class="mt-4">
-                    <script>
-                        atOptions = {
-                            'key' : 'b8e349cc7748d1f932a1a6b5f7cbd761',
-                            'format' : 'iframe',
-                            'height' : 250,
-                            'width' : 300,
-                            'params' : {}
-                        };
-                    </script>
-                    <script src="https://www.highperformanceformat.com/b8e349cc7748d1f932a1a6b5f7cbd761/invoke.js"></script>
-                </div>
-            </div>
-        </div>
 
         <!-- Footer -->
         <footer class="text-center py-8 border-t border-blue-500/10">
@@ -802,108 +389,6 @@
         </footer>
 
     </div>
-
-    <!-- JavaScript -->
-    <script>
-        // Copy Link Function
-        function copyLink(url) {
-            navigator.clipboard.writeText(url).then(() => {
-                showToast('Link copied to clipboard!');
-            }).catch(() => {
-                const textArea = document.createElement('textarea');
-                textArea.value = url;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                showToast('Link copied to clipboard!');
-            });
-        }
-
-        // Toast Notification
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toast-message');
-            toastMessage.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // Animated Counter
-        function animateCounter(element) {
-            const target = parseInt(element.getAttribute('data-count'));
-            const duration = 2000;
-            const step = target / (duration / 16);
-            let current = 0;
-
-            const timer = setInterval(() => {
-                current += step;
-                if (current >= target) {
-                    element.textContent = target;
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current);
-                }
-            }, 16);
-        }
-
-        // Intersection Observer for counters
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounter(entry.target);
-                    counterObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
-
-        document.querySelectorAll('.stat-number').forEach(counter => {
-            counterObserver.observe(counter);
-        });
-
-        // Scroll Animation Observer
-        const scrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    scrollObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-        // Add scroll animation to sections
-        document.querySelectorAll('section').forEach(section => {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-            scrollObserver.observe(section);
-        });
-
-        // Parallax effect for orbs
-        window.addEventListener('mousemove', (e) => {
-            const mouseX = e.clientX / window.innerWidth;
-            const mouseY = e.clientY / window.innerHeight;
-
-            document.querySelectorAll('.ambient-orb').forEach((orb, index) => {
-                const speed = (index + 1) * 10;
-                const x = (mouseX - 0.5) * speed;
-                const y = (mouseY - 0.5) * speed;
-                orb.style.transform = `translate(${x}px, ${y}px)`;
-            });
-        });
-
-        // Loading animation
-        window.addEventListener('load', () => {
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease';
-            setTimeout(() => {
-                document.body.style.opacity = '1';
-            }, 100);
-        });
-    </script>
 
 </body>
 </html>
