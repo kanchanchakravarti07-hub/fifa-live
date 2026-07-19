@@ -1,10 +1,12 @@
-<!DOCTYPE html>
+
+html_content = '''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LO Stream Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -60,6 +62,12 @@
             box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2), 0 0 60px rgba(59, 130, 246, 0.1);
         }
         
+        .glass-card.active {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+        
         .ambient-orb {
             position: absolute;
             border-radius: 50%;
@@ -88,6 +96,117 @@
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(147, 197, 253, 0.1);
         }
+        
+        /* Video Player Styles */
+        .video-container {
+            position: relative;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(147, 197, 253, 0.2);
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        .player-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .video-container:hover .player-controls {
+            opacity: 1;
+        }
+        
+        .quality-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quality-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .quality-btn.active {
+            background: rgba(59, 130, 246, 0.6);
+            border-color: rgba(59, 130, 246, 0.8);
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(59, 130, 246, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        
+        .play-overlay:hover {
+            background: rgba(59, 130, 246, 1);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 5;
+        }
+        
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #ef4444;
+            z-index: 5;
+            display: none;
+        }
+        
+        .buffering-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: #3b82f6;
+            width: 0%;
+            transition: width 0.3s;
+        }
     </style>
 </head>
 <body class="text-slate-200 relative overflow-x-hidden">
@@ -100,7 +219,7 @@
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
         <!-- Header -->
-        <header class="text-center mb-16">
+        <header class="text-center mb-12">
             <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6">
                 <span class="w-2 h-2 bg-green-400 rounded-full live-indicator"></span>
                 <span class="text-sm font-medium text-blue-200 tracking-wide">ALL STREAMS OPERATIONAL</span>
@@ -109,7 +228,7 @@
                 <span class="gradient-text">LO</span> <span class="text-white">Stream Portal</span>
             </h1>
             <p class="text-blue-200/60 text-lg max-w-2xl mx-auto font-light">
-                Premium live sports and international channels. Curated and maintained for optimal viewing experience.
+                Premium live sports and international channels. Built-in HLS player for Chrome & all browsers.
             </p>
         </header>
 
@@ -129,6 +248,50 @@
             </div>
         </div>
 
+        <!-- Active Player Section -->
+        <section id="player-section" class="mb-12 hidden">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="h-px flex-1 bg-gradient-to-r from-transparent via-red-500/50 to-transparent"></div>
+                <h2 class="text-2xl font-bold text-red-100 tracking-wide uppercase flex items-center gap-2">
+                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                    Now Playing
+                </h2>
+                <div class="h-px flex-1 bg-gradient-to-r from-transparent via-red-500/50 to-transparent"></div>
+            </div>
+            
+            <div class="video-container aspect-video max-w-5xl mx-auto mb-4">
+                <video id="video-player" playsinline></video>
+                <div id="loading-spinner" class="loading-spinner hidden"></div>
+                <div id="error-message" class="error-message">
+                    <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    <p class="font-semibold">Stream Error</p>
+                    <p id="error-text" class="text-sm opacity-70 mt-1">Unable to load stream</p>
+                </div>
+                <div id="play-overlay" class="play-overlay">
+                    <svg class="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"></path>
+                    </svg>
+                </div>
+                <div class="buffering-bar" id="buffer-bar"></div>
+            </div>
+            
+            <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h3 id="current-channel-name" class="text-xl font-bold text-white">Select a channel</h3>
+                    <p id="current-channel-desc" class="text-sm text-blue-200/50">Click any channel below to start streaming</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-blue-200/60 mr-2">Quality:</span>
+                    <button class="quality-btn" data-quality="240" onclick="changeQuality('240')">240p</button>
+                    <button class="quality-btn" data-quality="480" onclick="changeQuality('480')">480p</button>
+                    <button class="quality-btn active" data-quality="720" onclick="changeQuality('720')">720p</button>
+                    <button class="quality-btn" data-quality="1080" onclick="changeQuality('1080')">1080p</button>
+                </div>
+            </div>
+        </section>
+
         <!-- Sports Channels -->
         <section class="mb-16">
             <div class="flex items-center gap-4 mb-8">
@@ -139,7 +302,35 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
-                <!-- TSN Sports -->
+                <!-- TSN 1 -->
+                <div class="glass-card rounded-2xl p-6 cursor-pointer group channel-card" 
+                     onclick="playChannel('tsn1', 'TSN 1 HD', 'TSN Sports — Multi-quality HLS stream', {
+                        '240': 'https://dellamonic.s3.us-east-2.amazonaws.com/btsport_240p30.m3u8',
+                        '480': 'https://dellamonic.s3.us-east-2.amazonaws.com/btsport_480p30.m3u8',
+                        '720': 'https://dellamonic.s3.us-east-2.amazonaws.com/btsport_720p30.m3u8',
+                        '1080': 'https://dellamonic.s3.us-east-2.amazonaws.com/btsport_1080p30.m3u8'
+                     })">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="channel-badge rounded-xl p-3">
+                            <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-300 border border-green-500/30">HLS</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">TSN 1 HD</h3>
+                    <p class="text-sm text-blue-200/50 mb-4">Multi-quality HLS stream (240p - 1080p)</p>
+                    <div class="flex items-center gap-2 text-sm text-blue-300/70">
+                        <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                        <span>Click to play</span>
+                        <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- TSN Sports HD -->
                 <a href="https://tushar-streammmm.pages.dev/c3?id=DS" target="_blank" class="glass-card rounded-2xl p-6 block group">
                     <div class="flex items-start justify-between mb-4">
                         <div class="channel-badge rounded-xl p-3">
@@ -154,7 +345,7 @@
                     <p class="text-sm text-blue-200/50 mb-4">High frame rate sports coverage</p>
                     <div class="flex items-center gap-2 text-sm text-blue-300/70">
                         <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                        <span>Click to stream</span>
+                        <span>External stream</span>
                         <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                         </svg>
@@ -175,7 +366,7 @@
                     <p class="text-sm text-blue-200/50 mb-4">South American football coverage</p>
                     <div class="flex items-center gap-2 text-sm text-blue-300/70">
                         <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                        <span>Click to stream</span>
+                        <span>External stream</span>
                         <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                         </svg>
@@ -196,7 +387,7 @@
                     <p class="text-sm text-blue-200/50 mb-4">All devices compatible</p>
                     <div class="flex items-center gap-2 text-sm text-blue-300/70">
                         <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                        <span>Click to stream</span>
+                        <span>External stream</span>
                         <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                         </svg>
@@ -220,7 +411,7 @@
                     <p class="text-sm text-blue-200/50 mb-4">Ultra smooth streaming</p>
                     <div class="flex items-center gap-2 text-sm text-blue-300/70">
                         <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                        <span>Click to stream</span>
+                        <span>External stream</span>
                         <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                         </svg>
@@ -241,7 +432,7 @@
                     <p class="text-sm text-blue-200/50 mb-4">Brazilian sports and entertainment</p>
                     <div class="flex items-center gap-2 text-sm text-blue-300/70">
                         <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                        <span>Click to stream</span>
+                        <span>External stream</span>
                         <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                         </svg>
@@ -275,7 +466,7 @@
                     <p class="text-sm text-blue-200/50 mb-4">World English news coverage</p>
                     <div class="flex items-center gap-2 text-sm text-blue-300/70">
                         <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                        <span>Click to stream</span>
+                        <span>External stream</span>
                         <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                         </svg>
@@ -296,7 +487,7 @@
                     <p class="text-sm text-blue-200/50 mb-4">All devices compatible</p>
                     <div class="flex items-center gap-2 text-sm text-blue-300/70">
                         <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                        <span>Click to stream</span>
+                        <span>External stream</span>
                         <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                         </svg>
@@ -317,7 +508,7 @@
                     <p class="text-sm text-blue-200/50 mb-4">All devices compatible</p>
                     <div class="flex items-center gap-2 text-sm text-blue-300/70">
                         <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                        <span>Click to stream</span>
+                        <span>External stream</span>
                         <svg class="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                         </svg>
@@ -390,5 +581,217 @@
 
     </div>
 
+    <script>
+        let hls = null;
+        let currentChannelUrls = {};
+        let currentQuality = '720';
+        let currentChannelId = null;
+        const video = document.getElementById('video-player');
+        const playerSection = document.getElementById('player-section');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const errorMessage = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+        const playOverlay = document.getElementById('play-overlay');
+        const channelNameEl = document.getElementById('current-channel-name');
+        const channelDescEl = document.getElementById('current-channel-desc');
+        const bufferBar = document.getElementById('buffer-bar');
+
+        // Check if HLS is supported natively or via hls.js
+        function isHlsSupported() {
+            return Hls.isSupported() || video.canPlayType('application/vnd.apple.mpegurl');
+        }
+
+        function showLoading() {
+            loadingSpinner.classList.remove('hidden');
+            errorMessage.style.display = 'none';
+            playOverlay.style.display = 'none';
+        }
+
+        function hideLoading() {
+            loadingSpinner.classList.add('hidden');
+        }
+
+        function showError(msg) {
+            hideLoading();
+            errorText.textContent = msg;
+            errorMessage.style.display = 'block';
+            playOverlay.style.display = 'flex';
+        }
+
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        function destroyHls() {
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+        }
+
+        function loadStream(url) {
+            destroyHls();
+            hideError();
+            showLoading();
+
+            if (Hls.isSupported()) {
+                hls = new Hls({
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 60,
+                    liveSyncDurationCount: 3,
+                    enableWorker: true,
+                    debug: false
+                });
+
+                hls.loadSource(url);
+                hls.attachMedia(video);
+
+                hls.on(Hls.Events.MEDIA_ATTACHED, function() {
+                    video.play().catch(e => {
+                        // Auto-play blocked, show play button
+                        hideLoading();
+                        playOverlay.style.display = 'flex';
+                    });
+                });
+
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    hideLoading();
+                    playOverlay.style.display = 'none';
+                });
+
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                showError('Network error — stream may be offline or geo-blocked. Try a VPN.');
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                showError('Media error — stream format unsupported.');
+                                break;
+                            default:
+                                showError('Stream error — unable to load.');
+                                break;
+                        }
+                    }
+                });
+
+                hls.on(Hls.Events.BUFFER_APPENDING, function() {
+                    if (hls) {
+                        const buffered = video.buffered;
+                        if (buffered.length > 0) {
+                            const duration = video.duration || 1;
+                            const end = buffered.end(buffered.length - 1);
+                            bufferBar.style.width = Math.min((end / duration) * 100, 100) + '%';
+                        }
+                    }
+                });
+
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Native HLS support (Safari)
+                video.src = url;
+                video.addEventListener('loadedmetadata', function() {
+                    hideLoading();
+                    video.play().catch(() => {
+                        playOverlay.style.display = 'flex';
+                    });
+                });
+                video.addEventListener('error', function() {
+                    showError('Stream error — unable to load in native player.');
+                });
+            } else {
+                showError('HLS not supported in this browser. Use Chrome, Firefox, or Safari.');
+            }
+        }
+
+        function playChannel(id, name, desc, urls) {
+            currentChannelId = id;
+            currentChannelUrls = urls;
+            
+            // Show player section
+            playerSection.classList.remove('hidden');
+            playerSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Update info
+            channelNameEl.textContent = name;
+            channelDescEl.textContent = desc;
+            
+            // Highlight active card
+            document.querySelectorAll('.channel-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Load default quality
+            loadStream(urls[currentQuality]);
+        }
+
+        function changeQuality(quality) {
+            if (!currentChannelUrls[quality]) return;
+            
+            currentQuality = quality;
+            
+            // Update button states
+            document.querySelectorAll('.quality-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.quality === quality) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Reload stream with new quality
+            if (currentChannelUrls[quality]) {
+                loadStream(currentChannelUrls[quality]);
+            }
+        }
+
+        // Play overlay click handler
+        playOverlay.addEventListener('click', function() {
+            if (video.paused) {
+                video.play().then(() => {
+                    playOverlay.style.display = 'none';
+                }).catch(() => {
+                    // Still can't play
+                });
+            }
+        });
+
+        // Video click to toggle play/pause
+        video.addEventListener('click', function() {
+            if (video.paused) {
+                video.play();
+                playOverlay.style.display = 'none';
+            } else {
+                video.pause();
+                playOverlay.style.display = 'flex';
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space' && document.activeElement.tagName !== 'BUTTON') {
+                e.preventDefault();
+                if (video.paused) {
+                    video.play();
+                    playOverlay.style.display = 'none';
+                } else {
+                    video.pause();
+                    playOverlay.style.display = 'flex';
+                }
+            }
+        });
+
+        // Warn if HLS not supported on load
+        window.addEventListener('load', function() {
+            if (!isHlsSupported()) {
+                console.warn('HLS not supported in this browser');
+            }
+        });
+    </script>
 </body>
-</html>
+</html>'''
+
+with open('/mnt/agents/output/lo_stream_portal.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print("File saved successfully!")
+print(f"File size: {len(html_content)} characters")
